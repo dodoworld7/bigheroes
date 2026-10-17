@@ -3137,19 +3137,81 @@ button {
     text-align: center;
     padding: 30px 20px;
   }
-  .drive-current-url {
-    justify-content: center;
-  }
   .single-learning-drive-card {
     flex-direction: column;
     text-align: center;
-    padding: 32px 20px;
+    padding: 24px 16px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    gap: 20px;
+  }
+  .single-drive-icon {
+    width: 68px;
+    height: 68px;
+    font-size: 2.2rem;
+    border-radius: 18px;
+    margin: 0 auto;
+  }
+  .single-drive-body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
   .single-drive-badge-wrap {
     justify-content: center;
+    gap: 6px;
+  }
+  .single-drive-body h3 {
+    font-size: 1.22rem;
+    line-height: 1.38;
+    word-break: keep-all;
+    margin-bottom: 12px;
+  }
+  .single-drive-desc {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    text-align: left;
+    margin-bottom: 14px;
+    padding: 0 4px;
+    word-break: keep-all;
+  }
+  .drive-current-url {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+  }
+  .drive-current-url i {
+    flex-shrink: 0;
+    margin-right: 6px;
+  }
+  .drive-current-url span {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
   }
   .single-drive-action {
     width: 100%;
+  }
+  .btn-drive-large {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+    padding: 13px 18px;
+    white-space: normal;
   }
   .drive-banner-action {
     width: 100%;
