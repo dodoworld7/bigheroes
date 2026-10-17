@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 520" width="100%" height="auto" style="max-width: 580px; display: block; margin: 0 auto;">
+  <defs>
+    <filter id="soft-shadow" x="-8%" y="-8%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- 1. BIG 블록 (B: 청록 / I: 주황 / G: 파랑) -->
+  <g id="BIG-ROW">
+    <!-- B (청록/에메랄드그린) -->
+    <rect x="180" y="16" width="94" height="94" rx="16" fill="#00A88F" filter="url(#soft-shadow)"/>
+    <text x="227" y="86" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="76" fill="#FFFFFF" text-anchor="middle">B</text>
+
+    <!-- I (오렌지/주황) -->
+    <rect x="293" y="16" width="94" height="94" rx="16" fill="#F58220" filter="url(#soft-shadow)"/>
+    <text x="340" y="86" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="76" fill="#FFFFFF" text-anchor="middle">I</text>
+
+    <!-- G (밝은 코발트 블루) -->
+    <rect x="406" y="16" width="94" height="94" rx="16" fill="#0072CE" filter="url(#soft-shadow)"/>
+    <text x="453" y="86" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="76" fill="#FFFFFF" text-anchor="middle">G</text>
+  </g>
+
+  <!-- 2. HEROES 다이아몬드 실드 배지 행 -->
+  <g id="HEROES-ROW" transform="translate(10, 116)">
+    <!-- H -->
+    <g transform="translate(65, 0)">
+      <polygon points="45,0 90,24 45,86 0,24" fill="#E30613" filter="url(#soft-shadow)"/>
+      <polygon points="45,7 82,27 45,77 8,27" fill="#102B66"/>
+      <text x="45" y="56" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle">H</text>
+    </g>
+
+    <!-- E -->
+    <g transform="translate(152, 0)">
+      <polygon points="45,0 90,24 45,86 0,24" fill="#E30613" filter="url(#soft-shadow)"/>
+      <polygon points="45,7 82,27 45,77 8,27" fill="#102B66"/>
+      <text x="45" y="56" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle">E</text>
+    </g>
+
+    <!-- R -->
+    <g transform="translate(239, 0)">
+      <polygon points="45,0 90,24 45,86 0,24" fill="#E30613" filter="url(#soft-shadow)"/>
+      <polygon points="45,7 82,27 45,77 8,27" fill="#102B66"/>
+      <text x="45" y="56" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle">R</text>
+    </g>
+
+    <!-- O -->
+    <g transform="translate(326, 0)">
+      <polygon points="45,0 90,24 45,86 0,24" fill="#E30613" filter="url(#soft-shadow)"/>
+      <polygon points="45,7 82,27 45,77 8,27" fill="#102B66"/>
+      <text x="45" y="56" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle">O</text>
+    </g>
+
+    <!-- E -->
+    <g transform="translate(413, 0)">
+      <polygon points="45,0 90,24 45,86 0,24" fill="#E30613" filter="url(#soft-shadow)"/>
+      <polygon points="45,7 82,27 45,77 8,27" fill="#102B66"/>
+      <text x="45" y="56" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle">E</text>
+    </g>
+
+    <!-- S -->
+    <g transform="translate(500, 0)">
+      <polygon points="45,0 90,24 45,86 0,24" fill="#E30613" filter="url(#soft-shadow)"/>
+      <polygon points="45,7 82,27 45,77 8,27" fill="#102B66"/>
+      <text x="45" y="56" font-family="'Pretendard', 'Outfit', sans-serif" font-weight="900" font-size="44" fill="#FFFFFF" text-anchor="middle">S</text>
+    </g>
+  </g>
+
+  <!-- 3. '학생중심' 노란색 배지 & 햇살 효과 (H-E 아래 왼쪽 상단에 독립 배치) -->
+  <g id="STUDENT-BADGE" transform="translate(108, 214) rotate(-12)">
+    <!-- 왼쪽 햇살 2개 빗금 -->
+    <line x1="-8" y1="20" x2="-22" y2="10" stroke="#FBBF24" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="-4" y1="34" x2="-18" y2="28" stroke="#FBBF24" stroke-width="4.5" stroke-linecap="round"/>
+
+    <!-- 노란색 라운드 태그 -->
+    <rect x="0" y="0" width="124" height="40" rx="20" fill="#FFE135" stroke="#FBBF24" stroke-width="2" filter="url(#soft-shadow)"/>
+    <text x="62" y="28" font-family="'Pretendard', 'Jua', 'Noto Sans KR', sans-serif" font-weight="800" font-size="22" fill="#102B66" text-anchor="middle" letter-spacing="-0.5">학생중심</text>
+  </g>
+
+  <!-- 4. 메인 텍스트: "탐구프로그램으로" (하늘색 밑줄 포함, 충분한 여백 확보) -->
+  <g id="TEXT-LINE-1" transform="translate(340, 360)">
+    <!-- '으로' 아래 하늘색 붓터치 하이라이트 -->
+    <rect x="94" y="-14" width="102" height="16" rx="8" fill="#7DD3FC"/>
+    <!-- 텍스트 -->
+    <text x="0" y="0" font-family="'Pretendard', 'Noto Sans KR', sans-serif" font-weight="900" font-size="70" fill="#102B66" text-anchor="middle" letter-spacing="-3">탐구프로그램으로</text>
+  </g>
+
+  <!-- 5. 메인 텍스트: "디지털시민되기" -->
+  <g id="TEXT-LINE-2" transform="translate(340, 465)">
+    <text x="0" y="0" font-family="'Pretendard', 'Noto Sans KR', sans-serif" font-weight="900" font-size="72" fill="#102B66" text-anchor="middle" letter-spacing="-3">디지털시민되기</text>
+  </g>
+</svg>

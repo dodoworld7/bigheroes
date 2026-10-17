@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 센터 | BIG HEROES - 서울윤중초등학교</title>
+  
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // 인증 여부를 화면 그리기 전에 판단 (관리 화면이 잠깐이라도 보이지 않도록)
+    if (sessionStorage.getItem("big_heroes_admin_ok") === "1") {
+      document.documentElement.classList.add("admin-ok");
+    }
+  </script>
+  <style>
+    .admin-body {
+      background-color: #F8FAFC;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .admin-navbar {
+      background: white;
+      border-bottom: 1.5px solid var(--border-subtle);
+      padding: 16px 0;
+    }
+    .admin-nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-title-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .admin-tag {
+      background: var(--coral-primary);
+      color: white;
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .admin-container {
+      max-width: 1040px;
+      margin: 40px auto;
+      padding: 0 20px;
+      flex: 1;
+    }
+    .admin-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      border: 1.5px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 32px;
+    }
+    .admin-card-header {
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #F1F5F9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-card-header h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-title);
+    }
+    .admin-card-header p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .btn-home-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #1E3A8A;
+      background: var(--indigo-light);
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+    }
+    .btn-home-back:hover {
+      background: #BFDBFE;
+    }
+    /* 관리 메뉴 바로가기 */
+    .admin-quick-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .admin-quick-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: var(--radius-full);
+      background: white;
+      border: 1.5px solid var(--border-subtle);
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #334155;
+      transition: all 0.2s ease;
+    }
+    .admin-quick-nav a:hover {
+      border-color: #93C5FD;
+      color: #1D4ED8;
+      transform: translateY(-1px);
+    }
+    .drive-admin-current {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #1E3A8A;
+      min-width: 0;
+    }
+    .drive-admin-current code {
+      font-family: monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+      flex: 1;
+    }
+    .drive-admin-current a {
+      flex-shrink: 0;
+      font-weight: 700;
+      color: #2563EB;
+    }
+    /* ===== 비밀번호 잠금 화면 ===== */
+    html:not(.admin-ok) .admin-navbar,
+    html:not(.admin-ok) .admin-container {
+      display: none !important;
+    }
+    html.admin-ok .admin-lock-screen {
+      display: none;
+    }
+    .admin-lock-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: radial-gradient(circle at 20% 20%, rgba(254, 243, 199, 0.7) 0%, transparent 45%),
+                  radial-gradient(circle at 80% 80%, rgba(255, 228, 220, 0.8) 0%, transparent 45%),
+                  #FCF9F5;
+      z-index: 9999;
+    }
+    .lock-card {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      border-radius: 24px;
+      padding: 40px 32px 32px;
+      text-align: center;
+      border: 1.5px solid var(--border-subtle);
+      box-shadow: 0 24px 60px rgba(30, 41, 59, 0.12);
+    }
+    .lock-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.9rem;
+      color: white;
+      background: linear-gradient(135deg, #FF8A65, #FF6B4A);
+      box-shadow: 0 10px 24px rgba(255, 107, 74, 0.35);
+    }
+    .lock-card h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #1E293B;
+      margin-bottom: 6px;
+    }
+    .lock-card p {
+      font-size: 0.92rem;
+      color: #64748B;
+      margin-bottom: 22px;
+    }
+    .lock-input {
+      width: 100%;
+      text-align: center;
+      font-size: 1.6rem;
+      letter-spacing: 0.6em;
+      padding: 14px 0 14px 0.6em;
+      border: 2px solid #E2E8F0;
+      border-radius: 14px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .lock-input:focus {
+      border-color: #FF6B4A;
+      box-shadow: 0 0 0 4px rgba(255, 107, 74, 0.15);
+    }
+    .lock-error {
+      min-height: 22px;
+      margin: 10px 0 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #EF4444;
+    }
+    .lock-card .btn {
+      width: 100%;
+      justify-content: center;
+      padding: 13px 0;
+    }
+    .lock-back {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 0.88rem;
+      color: #64748B;
+    }
+    .lock-back:hover {
+      color: #1E293B;
+    }
+    .shake {
+      animation: lockShake 0.4s ease;
+    }
+    @keyframes lockShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #B91C1C;
+      background: #FEE2E2;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-logout:hover {
+      background: #FECACA;
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <!-- 비밀번호 잠금 화면 (인증 전에만 표시) -->
+  <div class="admin-lock-screen" id="adminLockScreen">
+    <form class="lock-card" id="adminLockForm" autocomplete="off">
+      <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+      <h1>관리자 인증</h1>
+      <p>관리자 비밀번호를 입력해 주세요.</p>
+      <input type="password" id="adminPwInput" class="lock-input" inputmode="numeric" maxlength="10" placeholder="••••" aria-label="관리자 비밀번호">
+      <div class="lock-error" id="adminPwError"></div>
+      <button type="submit" class="btn btn-primary"><i class="fa-solid fa-unlock"></i> 확인</button>
+      <a href="index.html" class="lock-back"><i class="fa-solid fa-arrow-left"></i> 메인 홈페이지로 돌아가기</a>
+    </form>
+  </div>
+
+  <nav class="admin-navbar">
+    <div class="container admin-nav-inner">
+      <div class="admin-title-badge">
+        <span class="admin-tag">관리자 전용</span>
+        <strong style="font-size: 1.15rem; color: #1E293B;">서울윤중초등학교 BIG HEROES 관리자 센터</strong>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <a href="index.html" class="btn-home-back">
+          <i class="fa-solid fa-arrow-left"></i> 메인 홈페이지로 이동
+        </a>
+        <button type="button" class="btn-logout" id="adminLogoutBtn">
+          <i class="fa-solid fa-right-from-bracket"></i> 잠금(로그아웃)
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+    <!-- 관리 메뉴 바로가기 -->
+    <div class="admin-quick-nav">
+      <a href="#driveAdminCard"><i class="fa-brands fa-google-drive" style="color:#2563EB;"></i> 학습자료 드라이브 주소</a>
+      <a href="#photoAdminCard"><i class="fa-solid fa-cloud-arrow-up" style="color: var(--coral-primary);"></i> 활동사진 등록</a>
+      <a href="#photoListCard"><i class="fa-solid fa-images" style="color: var(--amber-gold);"></i> 등록된 사진 관리</a>
+    </div>
+
+    <!-- 학습자료 드라이브 주소 설정 카드 (메인 페이지에서 이동) -->
+    <div class="admin-card" id="driveAdminCard">
+      <div class="admin-card-header">
+        <div>
+          <h2><i class="fa-brands fa-google-drive" style="color: #2563EB;"></i> 학습자료 드라이브 주소 설정</h2>
+          <p>메인 페이지의 [학습자료 드라이브 열기] 버튼이 연결될 구글 드라이브 폴더 주소를 입력해 주세요.</p>
+        </div>
+      </div>
+
+      <div class="drive-admin-current">
+        <i class="fa-solid fa-link"></i>
+        <span style="flex-shrink:0; font-weight:700;">현재 적용 주소</span>
+        <code id="adminCurrentDriveUrl">-</code>
+        <a href="#" target="_blank" rel="noopener noreferrer" id="adminOpenDriveLink">열어보기 <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
+
+      <form id="adminDriveForm">
+        <div class="form-group">
+          <label for="adminDriveUrlInput">구글 드라이브 폴더 공유 링크 URL</label>
+          <input type="url" id="adminDriveUrlInput" placeholder="https://drive.google.com/drive/folders/..." required>
+        </div>
+        <div class="url-tip-box">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>구글 드라이브 폴더에서 <strong>[공유] → [링크가 있는 모든 사용자 - 뷰어]</strong>로 설정된 링크를 붙여넣으시면 방문객 누구나 로그인 없이 바로 열람할 수 있습니다.</span>
+        </div>
+        <div class="form-actions-right mt-3">
+          <button type="button" class="btn btn-secondary" id="adminDriveResetBtn">기본 주소로</button>
+          <button type="submit" class="btn btn-primary" style="padding: 12px 28px;">
+            <i class="fa-solid fa-floppy-disk"></i> 저장 및 링크 적용
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 사진 등록 폼 카드 -->
+    <div class="admin-card" id="photoAdminCard">
+      <div class="admin-card-header">
+        <div>
+          <h2><i class="fa-solid fa-cloud-arrow-up" style="color: var(--coral-primary);"></i> 새 학생 활동사진 등록</h2>
+          <p>홈페이지 첫 화면 갤러리에 노출될 학생들의 생생한 탐구 활동 사진을 업로드해 주세요.</p>
+        </div>
+      </div>
+
+      <form id="adminPhotoForm">
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="adminPhotoTitle">활동명 / 사진 제목</label>
+            <input type="text" id="adminPhotoTitle" placeholder="예: [4학년] 저작권 지킨 나만의 자화상 완성" required>
+          </div>
+          <div class="form-group flex-1">
+            <label for="adminPhotoGrade">학년 / 활동 영역</label>
+            <select id="adminPhotoGrade">
+              <option value="2학년">2학년</option>
+              <option value="3학년">3학년</option>
+              <option value="4학년" selected>4학년</option>
+              <option value="5학년">5학년</option>
+              <option value="과학교과">과학교과 연계</option>
+              <option value="학교축제">학교 축제·캠페인</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adminPhotoDesc">활동 설명 (캡션)</label>
+          <input type="text" id="adminPhotoDesc" placeholder="예: 명화의 이용조건을 확인하고 자신의 생각을 담아 표현한 산출물" required>
+        </div>
+
+        <div class="form-row file-or-url-row">
+          <div class="form-group flex-1">
+            <label for="adminFileInput"><i class="fa-solid fa-folder-open"></i> 내 컴퓨터에서 사진 파일 찾기 (권장)</label>
+            <input type="file" id="adminFileInput" accept="image/*">
+          </div>
+          <div class="form-group flex-1">
+            <label for="adminPhotoUrl"><i class="fa-solid fa-link"></i> 또는 외부 이미지 URL 직접 입력</label>
+            <input type="url" id="adminPhotoUrl" placeholder="https://...">
+          </div>
+        </div>
+
+        <!-- 이미지 미리보기 -->
+        <div class="photo-preview-box" id="adminPreviewBox" style="height: 220px;">
+          <span class="preview-placeholder"><i class="fa-regular fa-image"></i> 사진을 선택하거나 URL을 입력하면 미리보기가 표시됩니다.</span>
+        </div>
+
+        <div class="form-actions-right">
+          <button type="submit" class="btn btn-primary" style="padding: 12px 28px;">
+            <i class="fa-solid fa-check"></i> 첫 화면 갤러리에 등록하기
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 현재 등록된 사진 관리 카드 -->
+    <div class="admin-card" id="photoListCard">
+      <div class="admin-card-header">
+        <div>
+          <h2><i class="fa-solid fa-images" style="color: var(--amber-gold);"></i> 현재 첫 화면 노출 중인 사진 목록 (<span id="adminTotalCount">0</span>장)</h2>
+          <p>등록된 사진은 언제든 삭제하거나 기본 추천 사진으로 되돌릴 수 있습니다.</p>
+        </div>
+        <button class="btn-reset-photos" id="adminResetBtn" style="font-size: 0.88rem; padding: 6px 14px;">
+          <i class="fa-solid fa-rotate-left"></i> 기본 추천 사진으로 복원
+        </button>
+      </div>
+
+      <div class="current-photo-grid" id="adminPhotoGrid">
+        <!-- JS 렌더링 -->
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+  <script>
+    // ===== 관리자 비밀번호 잠금 =====
+    // ⚠️ TODO(배포 시 필수): 현재는 로컬 사용을 위한 임시 방식(브라우저에서 비교)입니다.
+    //    배포할 때는 서버 인증(환경변수 비밀번호 + HttpOnly 세션 쿠키)으로 교체하세요.
+    //    자세한 작업 목록은 프로젝트 루트의 AGENTS.md 참고.
+    (function () {
+      const ADMIN_PASSWORD = "2042";
+      const AUTH_KEY = "big_heroes_admin_ok";
+      const form = document.getElementById("adminLockForm");
+      const input = document.getElementById("adminPwInput");
+      const errorEl = document.getElementById("adminPwError");
+      const logoutBtn = document.getElementById("adminLogoutBtn");
+
+      if (!document.documentElement.classList.contains("admin-ok") && input) {
+        input.focus();
+      }
+
+      if (form) {
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          if (input.value.trim() === ADMIN_PASSWORD) {
+            sessionStorage.setItem(AUTH_KEY, "1");
+            document.documentElement.classList.add("admin-ok");
+            input.value = "";
+            errorEl.textContent = "";
+            window.scrollTo(0, 0);
+          } else {
+            errorEl.textContent = "비밀번호가 올바르지 않아요.";
+            input.value = "";
+            form.classList.remove("shake");
+            void form.offsetWidth; // 애니메이션 재시작
+            form.classList.add("shake");
+            input.focus();
+          }
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+          sessionStorage.removeItem(AUTH_KEY);
+          document.documentElement.classList.remove("admin-ok");
+          if (input) input.focus();
+        });
+      }
+    })();
+  </script>
+  <script>
+    // 관리자 페이지 전용 초기화
+    document.addEventListener("DOMContentLoaded", () => {
+      const adminPhotoForm = document.getElementById("adminPhotoForm");
+      const adminFileInput = document.getElementById("adminFileInput");
+      const adminPhotoUrl = document.getElementById("adminPhotoUrl");
+      const adminPreviewBox = document.getElementById("adminPreviewBox");
+      const adminResetBtn = document.getElementById("adminResetBtn");
+      let currentAdminImgSrc = "";
+
+      renderAdminPhotos();
+      initAdminDrive();
+
+      // 파일 업로드
+      if (adminFileInput) {
+        adminFileInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              currentAdminImgSrc = event.target.result;
+              if (adminPreviewBox) {
+                adminPreviewBox.innerHTML = `<img src="${currentAdminImgSrc}" alt="미리보기" style="width:100%; height:100%; object-fit:contain;">`;
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // URL 입력
+      if (adminPhotoUrl) {
+        adminPhotoUrl.addEventListener("input", (e) => {
+          const url = e.target.value.trim();
+          if (url) {
+            currentAdminImgSrc = url;
+            if (adminPreviewBox) {
+              adminPreviewBox.innerHTML = `<img src="${currentAdminImgSrc}" alt="미리보기" style="width:100%; height:100%; object-fit:contain;" onerror="this.src='https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80'">`;
+            }
+          }
+        });
+      }
+
+      // 사진 등록
+      if (adminPhotoForm) {
+        adminPhotoForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const title = document.getElementById("adminPhotoTitle").value.trim();
+          const grade = document.getElementById("adminPhotoGrade").value;
+          const desc = document.getElementById("adminPhotoDesc").value.trim();
+          const imgSource = currentAdminImgSrc || adminPhotoUrl.value.trim();
+
+          if (!imgSource) {
+            alert("사진 파일을 선택하거나 이미지 URL을 입력해 주세요.");
+            return;
+          }
+
+          const newPhoto = {
+            id: "p_" + Date.now(),
+            title,
+            grade,
+            desc,
+            imageUrl: imgSource
+          };
+
+          const photos = AppState.getPhotos();
+          photos.unshift(newPhoto);
+          AppState.savePhotos(photos);
+
+          adminPhotoForm.reset();
+          currentAdminImgSrc = "";
+          adminPreviewBox.innerHTML = `<span class="preview-placeholder"><i class="fa-regular fa-image"></i> 사진을 선택하거나 URL을 입력하면 미리보기가 표시됩니다.</span>`;
+
+          renderAdminPhotos();
+          alert("성공적으로 사진이 등록되었습니다! 메인 홈페이지에서 바로 확인하실 수 있습니다.");
+        });
+      }
+
+      // 복원
+      if (adminResetBtn) {
+        adminResetBtn.addEventListener("click", () => {
+          if (confirm("등록된 모든 사진을 기본 추천 사진으로 복원하시겠습니까?")) {
+            AppState.savePhotos(DEFAULT_PHOTOS);
+            renderAdminPhotos();
+            alert("기본 사진으로 복원되었습니다.");
+          }
+        });
+      }
+    });
+
+    // 학습자료 드라이브 주소 관리 (관리자 전용)
+    function initAdminDrive() {
+      const form = document.getElementById("adminDriveForm");
+      const input = document.getElementById("adminDriveUrlInput");
+      const resetBtn = document.getElementById("adminDriveResetBtn");
+      const currentEl = document.getElementById("adminCurrentDriveUrl");
+      const openLink = document.getElementById("adminOpenDriveLink");
+
+      const refresh = () => {
+        const url = AppState.getDriveUrl();
+        if (currentEl) currentEl.textContent = url;
+        if (openLink) openLink.href = url;
+        if (input) input.value = url;
+      };
+      refresh();
+
+      if (form) {
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const newUrl = input.value.trim();
+          if (!newUrl) return;
+          AppState.saveDriveUrl(newUrl);
+          refresh();
+          showToast("구글 드라이브 주소가 저장되었습니다! 메인 페이지에 바로 적용됩니다.");
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          if (input) input.value = DEFAULT_DRIVE_URL;
+        });
+      }
+    }
+
+    function renderAdminPhotos() {
+      const grid = document.getElementById("adminPhotoGrid");
+      const countEl = document.getElementById("adminTotalCount");
+      if (!grid) return;
+
+      const photos = AppState.getPhotos();
+      if (countEl) countEl.textContent = photos.length;
+      grid.innerHTML = "";
+
+      photos.forEach(photo => {
+        const item = document.createElement("div");
+        item.className = "curr-photo-item";
+        item.innerHTML = `
+          <img src="${photo.imageUrl}" alt="${photo.title}" onerror="this.src='https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80'">
+          <div class="curr-photo-meta">
+            <strong>${escapeHtml(photo.title)}</strong>
+            <span>${photo.grade} | ${escapeHtml(photo.desc)}</span>
+          </div>
+          <button class="btn-delete-photo" onclick="deleteAdminPhoto('${photo.id}')">
+            <i class="fa-solid fa-trash-can"></i> 삭제하기
+          </button>
+        `;
+        grid.appendChild(item);
+      });
+    }
+
+    window.deleteAdminPhoto = function(id) {
+      if (confirm("이 사진을 삭제하시겠습니까?")) {
+        let photos = AppState.getPhotos();
+        photos = photos.filter(p => p.id !== id);
+        AppState.savePhotos(photos);
+        renderAdminPhotos();
+      }
+    };
+  </script>
+</body>
+</html>

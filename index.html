@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="서울윤중초등학교 2026 학교교육력 제고 연구 - BIG HEROES 학생중심 탐구프로그램으로 디지털시민되기 소개 홈페이지">
+  <meta name="author" content="서울윤중초등학교 김도현">
+  <title>BIG HEROES | 학생중심 탐구프로그램으로 디지털시민되기 - 서울윤중초등학교</title>
+  
+  <!-- Pretendard & Google Fonts -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&family=Outfit:wght@600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 상단 공지 안내 바 (방문자 환영) -->
+  <div class="top-announcement">
+    <div class="container announcement-inner">
+      <span class="badge-pill pulse"><i class="fa-solid fa-award"></i> 2026 학교교육력 제고 [창의미래교육영역]</span>
+      <span class="announcement-text">
+        <strong>서울특별시남부교육지원청</strong> 주관 연구 | BIG HEROES 디지털시민 교육연구 홈페이지에 오신 것을 환영합니다.
+      </span>
+      <button class="btn-briefing" id="openBriefingBtn">
+        <i class="fa-solid fa-bolt"></i> 연구 3분 핵심 요약
+      </button>
+    </div>
+  </div>
+
+  <!-- 메인 헤더 네비게이션 (한 줄 고정 & 가독성 극대화) -->
+  <header class="site-header" id="header">
+    <div class="container header-container">
+      <a href="#home" class="brand-logo">
+        <div class="logo-badge-official">
+          <span class="box-b">B</span>
+          <span class="box-i">I</span>
+          <span class="box-g">G</span>
+        </div>
+        <div class="logo-text-wrap">
+          <span class="school-sub">서울윤중초등학교</span>
+          <span class="brand-name">HEROES 디지털시민</span>
+        </div>
+      </a>
+
+      <!-- 한 줄로 정렬된 네비게이션 탭 (자료모음 탭 제거) -->
+      <nav class="nav-menu" id="navMenu">
+        <a href="#home" class="nav-link active">홈</a>
+        <a href="#program" class="nav-link">프로그램 소개</a>
+        <a href="#framework" class="nav-link">BIG·HEROES 체계</a>
+        <a href="#cases" class="nav-link">학년별 실천사례</a>
+        <a href="#results" class="nav-link">연구 성과·검증</a>
+        <a href="#feedback" class="nav-link">소통과 나눔</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#archive" class="btn-header-drive" title="구글 드라이브 학습자료실 바로가기">
+          <i class="fa-brands fa-google-drive"></i> <span>자료 드라이브</span>
+        </a>
+        <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 모바일 전용 상단 스와이프 탭 바 (화면 768px 이하에서만 노출되어 탭마다 독립된 화면 제공) -->
+  <nav class="mobile-sticky-tabs" id="mobileStickyTabs" aria-label="모바일 섹션 탭 메뉴">
+    <div class="mobile-tabs-scroll" id="mobileTabsScroll">
+      <button type="button" class="mobile-tab-btn active" data-target="#home">
+        <i class="fa-solid fa-house"></i> <span>홈</span>
+      </button>
+      <button type="button" class="mobile-tab-btn" data-target="#program">
+        <i class="fa-solid fa-seedling"></i> <span>프로그램 소개</span>
+      </button>
+      <button type="button" class="mobile-tab-btn" data-target="#framework">
+        <i class="fa-solid fa-sitemap"></i> <span>BIG·HEROES 체계</span>
+      </button>
+      <button type="button" class="mobile-tab-btn" data-target="#cases">
+        <i class="fa-solid fa-chalkboard-user"></i> <span>실천사례</span>
+      </button>
+      <button type="button" class="mobile-tab-btn" data-target="#results">
+        <i class="fa-solid fa-square-poll-vertical"></i> <span>성과·검증</span>
+      </button>
+      <button type="button" class="mobile-tab-btn" data-target="#archive">
+        <i class="fa-brands fa-google-drive"></i> <span>학습자료실</span>
+      </button>
+      <button type="button" class="mobile-tab-btn" data-target="#feedback">
+        <i class="fa-regular fa-comment-dots"></i> <span>소통·나눔</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 메인 컨텐츠 영역 -->
+  <main>
+    <!-- 1. 홈 / 히어로 섹션 -->
+    <section class="hero-section" id="home">
+      <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+
+      <div class="container hero-content">
+        <div class="hero-badge-group">
+          <span class="tag-agency"><i class="fa-solid fa-school-flag"></i> 서울특별시남부교육지원청 학교교육력제고</span>
+          <span class="tag-grade"><i class="fa-solid fa-children"></i> 2~5학년 78명 참여</span>
+        </div>
+
+        <!-- =======================================================
+             첫 번째 첨부 파일과 100% 동일한 원본 로고 이미지 (title_logo.png)
+             ======================================================= -->
+        <div class="official-emblem-container">
+          <div class="pdf-logo-wrapper">
+            <img src="title_logo.png" alt="BIG HEROES 학생중심 탐구프로그램으로 디지털시민되기" class="main-title-logo-img">
+          </div>
+        </div>
+
+        <!-- 학교명 표기 (제작자 표기는 페이지 맨 아래 푸터에만 유지) -->
+        <div class="hero-identity-box">
+          <div class="identity-school">
+            <i class="fa-solid fa-graduation-cap"></i> 서울윤중초등학교
+          </div>
+        </div>
+
+        <p class="hero-description">
+          디지털 도구의 단순 기능 학습을 넘어, <strong>학생 스스로 디지털 생활을 판단하고 성찰하는 기준을 탐구</strong>하여<br class="pc-only">
+          비판적으로 이해하고, 창의적으로 표현하며, 함께 참여하고 실천하는 <strong>따뜻한 디지털시민</strong>으로 성장합니다.
+        </p>
+
+        <!-- CTA 버튼 그룹 -->
+        <div class="hero-btn-group">
+          <a href="#program" class="btn btn-primary">
+            <i class="fa-solid fa-book-open-reader"></i> 프로그램 바로 둘러보기
+          </a>
+          <a href="#archive" class="btn btn-secondary">
+            <i class="fa-brands fa-google-drive"></i> 연구자료 구글 드라이브
+          </a>
+          <a href="#cases" class="btn btn-warm">
+            <i class="fa-solid fa-chalkboard-user"></i> 학년별 수업 사례 보기
+          </a>
+        </div>
+
+        <!-- 퀵 지표 카드 요약 -->
+        <div class="hero-quick-stats">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+            <div class="stat-info">
+              <span class="stat-number">3 × 6</span>
+              <span class="stat-label">BIG 3개 영역 & HEROES 6단계</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            <div class="stat-info">
+              <span class="stat-number">+0.52<small>점</small></span>
+              <span class="stat-label">디지털 리터러시 유의미한 향상</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+            <div class="stat-info">
+              <span class="stat-number">2개 축</span>
+              <span class="stat-label">탐구단계·발달단계별 점진적 주도권 이양</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-school-circle-check"></i></div>
+            <div class="stat-info">
+              <span class="stat-number">4개 학년</span>
+              <span class="stat-label">2·3·4·5학년 및 과학교과 연계</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 학생 활동사진 갤러리 슬라이더 -->
+        <div class="hero-gallery-wrapper">
+          <div class="gallery-header">
+            <div class="gallery-title-wrap">
+              <span class="sub-badge"><i class="fa-solid fa-camera"></i> 생생한 현장 기록</span>
+              <h3>학생들의 주도적인 탐구 & 실천 모습</h3>
+              <p class="gallery-subtext">디벗 활용, 정보 신호등 판별, 저작권 자화상, AI 건강 토론, 학교 캠페인까지 함께한 순간들입니다.</p>
+            </div>
+            <div class="gallery-controls">
+              <div class="slider-arrows">
+                <button class="slider-arrow prev" id="sliderPrevBtn" aria-label="이전 사진"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="slider-arrow next" id="sliderNextBtn" aria-label="다음 사진"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 사진 갤러리 트랙 -->
+          <div class="photo-slider-track" id="photoSliderTrack">
+            <!-- 자바스크립트로 로컬스토리지 연동하여 렌더링 -->
+          </div>
+        </div>
+
+        <!-- 모바일 전용 다음 페이지 안내 버튼 -->
+        <div class="mobile-section-pager">
+          <button type="button" class="btn-mobile-next" data-next="#program">
+            <span>다음: 프로그램 소개 보기</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 프로그램 소개 탭 -->
+    <section class="section-container" id="program">
+      <div class="container">
+        <div class="section-heading text-center">
+          <span class="section-tag"><i class="fa-solid fa-seedling"></i> 프로그램 탄생 배경과 목적</span>
+          <h2 class="section-title">왜 ‘기준을 탐구하는’ 학생중심 프로그램인가?</h2>
+          <p class="section-desc">
+            단순히 에듀테크 도구를 사용하는 것을 넘어, <strong>정보와 디지털 환경을 스스로 판단하고 책임 있게 행동하는 디지털시민</strong>을 길러냅니다.
+          </p>
+        </div>
+
+        <!-- 핵심 시사점 & 패러다임 전환 카드 (좌우 완벽 대칭 & 한 줄 정렬 최적화) -->
+        <div class="shift-comparison-grid">
+          <div class="shift-card before">
+            <div class="shift-header">
+              <span class="shift-icon"><i class="fa-solid fa-circle-question"></i></span>
+              <div>
+                <span class="badge-status">초기 구상 & 발견한 한계</span>
+                <h4>도구 기능 중심의 활용</h4>
+              </div>
+            </div>
+            <ul class="shift-list shift-list-clean">
+              <li>
+                <i class="fa-solid fa-xmark"></i>
+                <div class="shift-item-row">
+                  <strong class="shift-item-title warning-title">도구 중심의 한계 :</strong>
+                  <span class="shift-item-text">디지털 도구 사용만으로는 역량이 저절로 길러지지 않음</span>
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-xmark"></i>
+                <div class="shift-item-row">
+                  <strong class="shift-item-title warning-title">수동적 정보 수용 :</strong>
+                  <span class="shift-item-text">알고리즘 추천이나 검색 결과를 비판 없이 그대로 수용함</span>
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-xmark"></i>
+                <div class="shift-item-row">
+                  <strong class="shift-item-title warning-title">산출물 위주 활동 :</strong>
+                  <span class="shift-item-text">카드뉴스·PPT 완성에 치우쳐 실천 과정의 평가가 부족함</span>
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-xmark"></i>
+                <div class="shift-item-row">
+                  <strong class="shift-item-title warning-title">일회성 실천 그침 :</strong>
+                  <span class="shift-item-text">일회성 활동에 머물러 실제 생활과 온전한 성찰로 이어지지 못함</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="shift-arrow-center">
+            <div class="arrow-circle">
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+            <span class="arrow-text">연구를 통한<br><strong>핵심 전환</strong></span>
+          </div>
+
+          <div class="shift-card after">
+            <div class="shift-header">
+              <span class="shift-icon"><i class="fa-solid fa-circle-check"></i></span>
+              <div>
+                <span class="badge-status success">최종 프로그램 방향</span>
+                <h4>디지털시민성 기준 자체를 직접 탐구</h4>
+              </div>
+            </div>
+            <ul class="shift-list shift-list-clean">
+              <li>
+                <i class="fa-solid fa-check"></i>
+                <div class="shift-item-row">
+                  <strong class="shift-item-title">개념 기반 탐구 :</strong>
+                  <span class="shift-item-text">디지털시민성 요소 자체를 탐구 개념으로 설정</span>
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                <div class="shift-item-row">
+                  <strong class="shift-item-title">판단 기준 수립 :</strong>
+                  <span class="shift-item-text">'정보 신호등', '출처 카드' 등 스스로 판단하는 기준 도출</span>
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                <div class="shift-item-row">
+                  <strong class="shift-item-title">점진적 주도성 :</strong>
+                  <span class="shift-item-text">교사의 안내는 점차 줄이고 학생의 선택과 실천을 확장 (GRR)</span>
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-check"></i>
+                <div class="shift-item-row">
+                  <strong class="shift-item-title">순환적 실천·성찰 :</strong>
+                  <span class="shift-item-text">삶과 연결 → 탐구 → 생활성찰 → 실천 → 피드백 → 확산</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4대 디지털시민 역량 그리드 -->
+        <div class="competencies-container">
+          <div class="comp-header">
+            <h3><i class="fa-solid fa-certificate"></i> 본 프로그램이 지향하는 4대 디지털시민 역량</h3>
+            <p>UNESCO DKAP, Ribble(2015), Common Sense, 2022 개정 교육과정 및 서울시 AI·디지털 리터러시 내용체계를 재구성</p>
+          </div>
+
+          <div class="comp-grid">
+            <div class="comp-card card-blue">
+              <div class="comp-badge">역량 01</div>
+              <div class="comp-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+              <h4>디지털 리터러시 역량</h4>
+              <p>디지털 정보와 미디어를 무비판적으로 수용하지 않고, 출처와 근거를 확인하여 신뢰성과 타당성을 올바르게 판단함</p>
+              <div class="comp-tags">
+                <span>정보 신호등</span>
+                <span>알고리즘 이해</span>
+                <span>출처 확인</span>
+              </div>
+            </div>
+
+            <div class="comp-card card-orange">
+              <div class="comp-badge">역량 02</div>
+              <div class="comp-icon"><i class="fa-solid fa-lightbulb"></i></div>
+              <h4>디지털 창의·혁신 역량</h4>
+              <p>디지털 환경에서 자신의 생각을 새롭게 표현하되, 저작권과 타인의 권리를 존중하며 책임 있는 재창작(리믹스)을 실천함</p>
+              <div class="comp-tags">
+                <span>저작권 지키기</span>
+                <span>디지털 발자국</span>
+                <span>창의적 표현</span>
+              </div>
+            </div>
+
+            <div class="comp-card card-green">
+              <div class="comp-badge">역량 03</div>
+              <div class="comp-icon"><i class="fa-solid fa-heart-circle-check"></i></div>
+              <h4>디지털 정서 역량</h4>
+              <p>온라인 공간에서 자신의 감정을 알아차리고 조절하며, 상대방의 마음을 배려하고 공감하는 언어 습관을 실천함</p>
+              <div class="comp-tags">
+                <span>마음 담은 댓글</span>
+                <span>감정 인식·조절</span>
+                <span>온라인 네티켓</span>
+              </div>
+            </div>
+
+            <div class="comp-card card-purple">
+              <div class="comp-badge">역량 04</div>
+              <div class="comp-icon"><i class="fa-solid fa-users-rays"></i></div>
+              <h4>디지털 참여 역량</h4>
+              <p>디지털 공동체의 문제를 외면하지 않고 공정하게 참여하며, 약자를 지키는 업스탠더로서 함께 해결책을 실천함</p>
+              <div class="comp-tags">
+                <span>업스탠더 행동</span>
+                <span>디지털 선언문</span>
+                <span>학교 캠페인</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2개 축을 통한 학습자 주도성 확장 -->
+        <div class="grr-framework-box">
+          <div class="grr-title-wrap">
+            <span class="grr-tag">핵심 설계 원리</span>
+            <h3>두 개의 축으로 확장되는 학생 주도성 (GRR 모형 접목)</h3>
+            <p>단순 활동이 아닌, 교사의 비계는 점차 줄어들고 학생 스스로 판단하고 행동하는 주도성이 단계와 학년을 거쳐 넓어집니다.</p>
+          </div>
+
+          <div class="grr-axis-grid">
+            <div class="axis-card">
+              <div class="axis-header">
+                <span class="axis-num">축 1</span>
+                <h4>프로그램 단계별 주도성 확장</h4>
+              </div>
+              <div class="axis-steps">
+                <div class="axis-step-item">
+                  <span class="step-badge">H 삶과 연결</span>
+                  <p>교사가 실제 사례와 상황을 제시하며 탐구의 출발을 안내</p>
+                </div>
+                <div class="axis-step-item">
+                  <span class="step-badge">E 탐구하기</span>
+                  <p>학생 스스로 가설을 세우고 다양한 자료를 탐색·비교하며 개념 도출</p>
+                </div>
+                <div class="axis-step-item">
+                  <span class="step-badge">R 돌아보기</span>
+                  <p>구성한 개념을 바탕으로 나의 디지털 생활을 성찰하고 실천 원칙 수립</p>
+                </div>
+                <div class="axis-step-item highlight">
+                  <span class="step-badge">O·E·S 실천·평가·확산</span>
+                  <p>학생이 스스로 세운 기준으로 실천하고 피드백을 주고받으며 공동체로 확장!</p>
+                </div>
+              </div>
+              <div class="axis-summary">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i> 교사의 직접 안내는 점차 줄고 학생의 선택·판단·실천 범위 점진적 극대화
+              </div>
+            </div>
+
+            <div class="axis-card">
+              <div class="axis-header">
+                <span class="axis-num">축 2</span>
+                <h4>학년별 발달단계에 따른 탐구 범위 확장</h4>
+              </div>
+              <div class="axis-steps">
+                <div class="axis-step-item">
+                  <span class="grade-tag">2학년</span>
+                  <strong>탐구경험 익히기</strong>
+                  <p>교사의 안내에 따라 자신의 경험을 살펴보고 기초적인 규칙 실천</p>
+                </div>
+                <div class="axis-step-item">
+                  <span class="grade-tag">3학년</span>
+                  <strong>함께 탐구하기</strong>
+                  <p>친구와 질문과 자료를 나누며 신뢰성 있는 출처를 찾고 공유</p>
+                </div>
+                <div class="axis-step-item">
+                  <span class="grade-tag">4학년</span>
+                  <strong>스스로 확장하기</strong>
+                  <p>스스로 기준을 세워 자료를 선택하고 저작권 지킨 창작물 제작</p>
+                </div>
+                <div class="axis-step-item highlight">
+                  <span class="grade-tag">5학년</span>
+                  <strong>주체적으로 실천하기</strong>
+                  <p>AI 활용 기준 정립, 공동체 문제 발견 및 전교생 캠페인을 주도적으로 기획</p>
+                </div>
+              </div>
+              <div class="axis-summary">
+                <i class="fa-solid fa-graduation-cap"></i> 저학년의 기초 습관 형성에서 고학년의 사회적 공동체 참여로의 성장
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 모바일 전용 페이저 -->
+        <div class="mobile-section-pager">
+          <button type="button" class="btn-mobile-prev" data-prev="#home">
+            <i class="fa-solid fa-arrow-left"></i> <span>이전: 홈</span>
+          </button>
+          <button type="button" class="btn-mobile-next" data-next="#framework">
+            <span>다음: BIG·HEROES 체계</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. BIG · HEROES 구조 체계 -->
+    <section class="section-container bg-warm-light" id="framework">
+      <div class="container">
+        <div class="section-heading text-center">
+          <span class="section-tag"><i class="fa-solid fa-sitemap"></i> 프레임워크 한눈에 보기</span>
+          <h2 class="section-title">BIG 내용체계 & HEROES 6단계 탐구 절차</h2>
+          <p class="section-desc">무엇을 배울 것인가(BIG)와 어떻게 탐구할 것인가(HEROES)가 유기적으로 맞물려 있습니다.</p>
+        </div>
+
+        <!-- 탭 전환 버튼 -->
+        <div class="framework-tab-btns">
+          <button class="fw-tab-btn active" data-target="bigFramework">
+            <span class="fw-letter">BIG</span> 내용체계 (무엇을 배우는가)
+          </button>
+          <button class="fw-tab-btn" data-target="heroesFramework">
+            <span class="fw-letter">HEROES</span> 탐구절차 (어떻게 배우는가)
+          </button>
+        </div>
+
+        <!-- BIG 내용 체계 뷰 -->
+        <div class="framework-content-view active" id="bigFramework">
+          <div class="big-grid-container">
+            <!-- B -->
+            <div class="big-item-card card-b">
+              <div class="big-card-header">
+                <div class="letter-badge">B</div>
+                <div class="header-titles">
+                  <span class="eng">Balance</span>
+                  <h3>분별하는 디지털시민</h3>
+                  <span class="sub">디지털 리터러시</span>
+                </div>
+              </div>
+              <div class="big-card-body">
+                <p class="def">디지털 정보와 미디어를 비판적으로 이해하고 올바르게 판단하며, 타인에게 미치는 영향을 고려하여 책임 있게 행동합니다.</p>
+                <div class="concepts-box">
+                  <h5>핵심 개념 & 탐구 주제</h5>
+                  <div class="concept-chips">
+                    <span class="chip">정보의 선택과 흐름</span>
+                    <span class="chip">정보에 담긴 관점과 신뢰성</span>
+                    <span class="chip">검색 결과의 차이 (2g)</span>
+                    <span class="chip">광고와 정보 구별 (3g)</span>
+                    <span class="chip">알고리즘 추천 원리 (4g)</span>
+                    <span class="chip">필터버블과 정보선택 (5g)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- I -->
+            <div class="big-item-card card-i">
+              <div class="big-card-header">
+                <div class="letter-badge">I</div>
+                <div class="header-titles">
+                  <span class="eng">Inspire</span>
+                  <h3>창의적인 디지털시민</h3>
+                  <span class="sub">디지털 창의·혁신</span>
+                </div>
+              </div>
+              <div class="big-card-body">
+                <p class="def">새로운 아이디어를 창의적으로 표현하고 문제를 해결하며, 타인의 저작권과 권리를 존중하며 피드백으로 발전시킵니다.</p>
+                <div class="concepts-box">
+                  <h5>핵심 개념 & 탐구 주제</h5>
+                  <div class="concept-chips">
+                    <span class="chip">디지털 정체성과 표현</span>
+                    <span class="chip">디지털 창작과 권리</span>
+                    <span class="chip">온라인에 보이는 나 (2g)</span>
+                    <span class="chip">온라인 기록과 발자국 (3·4g)</span>
+                    <span class="chip">저작권 지키는 창작 (4g)</span>
+                    <span class="chip">이용허락과 리믹스 (5g)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- G -->
+            <div class="big-item-card card-g">
+              <div class="big-card-header">
+                <div class="letter-badge">G</div>
+                <div class="header-titles">
+                  <span class="eng">Grow together</span>
+                  <h3>참여하는 디지털시민</h3>
+                  <span class="sub">디지털 정서 & 참여</span>
+                </div>
+              </div>
+              <div class="big-card-body">
+                <p class="def">디지털 공동체의 문제에 관심을 갖고 책임 있게 참여하며, 상대방을 존중하고 갈등을 조정하며 건강한 소통 문화를 만듭니다.</p>
+                <div class="concepts-box">
+                  <h5>핵심 개념 & 탐구 주제</h5>
+                  <div class="concept-chips">
+                    <span class="chip">디지털 소통과 관계</span>
+                    <span class="chip">디지털 참여와 책임</span>
+                    <span class="chip">화면 너머의 사람 (2g)</span>
+                    <span class="chip">온라인 감정과 공감 (3g)</span>
+                    <span class="chip">사람-인공지능의 건강한 관계 (5g)</span>
+                    <span class="chip">업스탠더의 공동체 캠페인 (5g)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HEROES 탐구 절차 뷰 -->
+        <div class="framework-content-view" id="heroesFramework">
+          <div class="heroes-timeline">
+            <!-- H -->
+            <div class="hero-step-card">
+              <div class="step-circle h">H</div>
+              <div class="step-meta">
+                <span class="step-code">Hunt</span>
+                <h4>삶과 연결</h4>
+              </div>
+              <p class="step-desc">디지털 생활의 생생한 사례와 경험을 살펴보고, 스스로 탐구 질문을 발견하며 계획을 수립합니다.</p>
+              <div class="step-act"><strong>주요 활동:</strong> 궁금증 발견카드, 일상 경험 패들렛 공유, 대조 관찰</div>
+            </div>
+
+            <!-- E -->
+            <div class="hero-step-card">
+              <div class="step-circle e1">E</div>
+              <div class="step-meta">
+                <span class="step-code">Explore</span>
+                <h4>탐구하기</h4>
+              </div>
+              <p class="step-desc">다양한 자료와 실험(대조검색, 출처 비교 등)을 통해 핵심 개념의 의미를 분석하고 스스로 규칙을 구성합니다.</p>
+              <div class="step-act"><strong>주요 활동:</strong> 대조 실험, 출처 보물찾기, 신호등 질문 분석</div>
+            </div>
+
+            <!-- R -->
+            <div class="hero-step-card">
+              <div class="step-circle r">R</div>
+              <div class="step-meta">
+                <span class="step-code">Resolve</span>
+                <h4>디지털생활 돌아보기</h4>
+              </div>
+              <p class="step-desc">구성한 개념과 기준을 거울삼아 자신의 과거 디지털 행동을 정직하게 성찰하고 구체적 실천 원칙을 세웁니다.</p>
+              <div class="step-act"><strong>주요 활동:</strong> 정보 신호등 자가진단, "나는 ~하겠다" 실천 원칙 작성</div>
+            </div>
+
+            <!-- O -->
+            <div class="hero-step-card">
+              <div class="step-circle o">O</div>
+              <div class="step-meta">
+                <span class="step-code">Operate</span>
+                <h4>디지털생활 실천하기</h4>
+              </div>
+              <p class="step-desc">세운 원칙을 바탕으로 실제 창작 및 실천 활동에 적용하고 점검할 평가 기준을 마련합니다.</p>
+              <div class="step-act"><strong>주요 활동:</strong> 세시풍속 소개카드, 저작권 자화상, AI 건강 답변 대조</div>
+            </div>
+
+            <!-- E -->
+            <div class="hero-step-card">
+              <div class="step-circle e2">E</div>
+              <div class="step-meta">
+                <span class="step-code">Evaluate</span>
+                <h4>평가하기 (피드백)</h4>
+              </div>
+              <p class="step-desc">스스로 세운 평가 기준에 맞춰 자기·동료 평가를 진행하고, 따뜻한 피드백을 통해 결과물을 수정·보완합니다.</p>
+              <div class="step-act"><strong>주요 활동:</strong> 패들렛 갤러리워크, 마음을 담은 댓글, 루브릭 점검</div>
+            </div>
+
+            <!-- S -->
+            <div class="hero-step-card">
+              <div class="step-circle s">S</div>
+              <div class="step-meta">
+                <span class="step-code">Sustain</span>
+                <h4>확산하기</h4>
+              </div>
+              <p class="step-desc">탐구 전후 자신의 생각과 태도 변화를 성찰하고, 가정과 학교 전체, 지역사회로 실천 경험을 널리 확산합니다.</p>
+              <div class="step-act"><strong>주요 활동:</strong> QR코드 전시, 학교 캠페인 챌린지, 가정 연계 약속판</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 모바일 전용 페이저 -->
+        <div class="mobile-section-pager">
+          <button type="button" class="btn-mobile-prev" data-prev="#program">
+            <i class="fa-solid fa-arrow-left"></i> <span>이전: 프로그램 소개</span>
+          </button>
+          <button type="button" class="btn-mobile-next" data-next="#cases">
+            <span>다음: 학년별 실천사례</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 학년별 실천 사례 탭 -->
+    <section class="section-container" id="cases">
+      <div class="container">
+        <div class="section-heading text-center">
+          <span class="section-tag"><i class="fa-solid fa-chalkboard-user"></i> 수업 현장 적용 스토리</span>
+          <h2 class="section-title">학년별 발달단계에 맞춘 생생한 수업 실천 사례</h2>
+          <p class="section-desc">서울윤중초등학교 교실에서 펼쳐진 2학년부터 5학년까지의 실제 수업 과정과 아이들의 목소리를 확인하세요.</p>
+        </div>
+
+        <!-- 학년 선택 필터 탭 -->
+        <div class="grade-filter-btns">
+          <button class="grade-btn active" data-grade="all">전체 보기</button>
+          <button class="grade-btn" data-grade="grade2">2학년 (검색어 규칙)</button>
+          <button class="grade-btn" data-grade="grade3">3학년 (출처 표시)</button>
+          <button class="grade-btn" data-grade="grade4">4학년 (저작권 자화상)</button>
+          <button class="grade-btn" data-grade="grade5">5학년 (AI & 캠페인)</button>
+          <button class="grade-btn" data-grade="subject">과학교과 연계</button>
+        </div>
+
+        <div class="cases-grid">
+          <!-- 2학년 사례 카드 -->
+          <div class="case-card" data-category="grade2">
+            <div class="case-header bg-coral">
+              <span class="case-grade-badge">2학년 | 디지털 리터러시 & 정서</span>
+              <h3>달라지는 검색창, 나만의 검색어 찾기</h3>
+              <p class="case-question"><i class="fa-solid fa-circle-question"></i> "같은 궁금증도 검색어를 다르게 쓰면 결과가 달라질까?"</p>
+            </div>
+            <div class="case-body">
+              <div class="case-info-row">
+                <span><strong>연계 교과:</strong> 슬기로운 생활, 국어</span>
+                <span><strong>차시:</strong> 7차시</span>
+              </div>
+              <div class="case-summary-box">
+                <h5><i class="fa-solid fa-list-check"></i> 주요 탐구 및 실천 내용</h5>
+                <ul>
+                  <li><strong>대조 실험 :</strong> 넓은 검색어(예: 햄스터) vs 구체적 검색어(예: 햄스터 키우는 안전한 방법) 비교 탐구</li>
+                  <li><strong>개념 구성 :</strong> "궁금한 대상과 알고 싶은 내용을 함께 쓰면 원하는 정보가 잘 나온다!"</li>
+                  <li><strong>실천 산출물 :</strong> 나만의 검색 규칙을 적용한 [반려동물 안전수첩] 카드 제작 및 패들렛 갤러리워크</li>
+                </ul>
+              </div>
+              <div class="student-quote">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"‘햄스터’라고만 쳤을 땐 장난감 광고만 잔뜩 나와서 당황했는데, ‘햄스터 안전하게 키우는 법’으로 검색하니 꼭 필요한 정보가 쏙 나왔어요!" - 2학년 정OO 학생</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3학년 사례 카드 -->
+          <div class="case-card" data-category="grade3">
+            <div class="case-header bg-amber">
+              <span class="case-grade-badge">3학년 | 디지털 리터러시 & 창의·혁신</span>
+              <h3>알게 된 곳은 또렷하게, 내 글은 믿음직하게</h3>
+              <p class="case-question"><i class="fa-solid fa-circle-question"></i> "믿을 수 있는 정보를 골라 자료를 만들 때, 무엇을 어떻게 밝혀야 할까?"</p>
+            </div>
+            <div class="case-body">
+              <div class="case-info-row">
+                <span><strong>연계 교과:</strong> 국어, 사회</span>
+                <span><strong>차시:</strong> 9차시</span>
+              </div>
+              <div class="case-summary-box">
+                <h5><i class="fa-solid fa-list-check"></i> 주요 탐구 및 실천 내용</h5>
+                <ul>
+                  <li><strong>출처 보물찾기 :</strong> 교과서와 믿을 수 있는 누리집에서 출처 표기 공통점 찾아내기</li>
+                  <li><strong>정보 신호등 놀이 :</strong> 누가 만들었나? 언제 만들었나? 다른 곳에도 나오나? 3가지 질문으로 검증</li>
+                  <li><strong>실천 산출물 :</strong> 출처 이름표를 정직하게 붙인 [세시풍속 소개카드] 캔바 제작 및 QR코드 전시</li>
+                </ul>
+              </div>
+              <div class="student-quote">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"이 블로그는 작성자가 안 나와서 노란불이에요. 국립민속박물관 사이트는 어디서 온 정보인지 명확하니까 초록불이에요!" - 3학년 학생</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4학년 사례 카드 -->
+          <div class="case-card" data-category="grade4">
+            <div class="case-header bg-emerald">
+              <span class="case-grade-badge">4학년 | 창의적인 디지털시민 (창작과 권리)</span>
+              <h3>내 생각은 새롭게, 권리는 소중하게</h3>
+              <p class="case-question"><i class="fa-solid fa-circle-question"></i> "다른 사람의 그림을 활용한 창작은 어디까지 허용될까?"</p>
+            </div>
+            <div class="case-body">
+              <div class="case-info-row">
+                <span><strong>연계 교과:</strong> 국어, 도덕, 미술</span>
+                <span><strong>차시:</strong> 9차시</span>
+              </div>
+              <div class="case-summary-box">
+                <h5><i class="fa-solid fa-list-check"></i> 주요 탐구 및 실천 내용</h5>
+                <ul>
+                  <li><strong>허락과 출처의 차이 탐구 :</strong> 출처만 쓰면 무조건 써도 되는가? CCL(이용허락조건) 심층 분석</li>
+                  <li><strong>생활 성찰 :</strong> 과거 숙제나 발표자료를 만들 때 남의 그림을 무단 사용했는지 정보 신호등으로 반성</li>
+                  <li><strong>실천 산출물 :</strong> 명화 이용 조건을 준수하여 나만의 특징을 더한 [디지털 자화상] 제작 및 전교 캠페인 포스터</li>
+                </ul>
+              </div>
+              <div class="student-quote">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"출처만 밝히면 다 되는 줄 알았는데, 먼저 ‘사용해도 되는지(이용 허락)’ 확인해야 한다는 걸 깨달았어요." - 4학년 김OO 학생</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5학년 사례 카드 1 -->
+          <div class="case-card" data-category="grade5">
+            <div class="case-header bg-blue">
+              <span class="case-grade-badge">5학년 | 디지털 리터러시 & 창의·혁신</span>
+              <h3>리믹스로 새롭게, 권리는 지켜서</h3>
+              <p class="case-question"><i class="fa-solid fa-circle-question"></i> "다른 사람의 작품을 바꾸어 만든 것은 언제 새로운 창작이 될까?"</p>
+            </div>
+            <div class="case-body">
+              <div class="case-info-row">
+                <span><strong>연계 교과:</strong> 실과, 국어</span>
+                <span><strong>차시:</strong> 7차시</span>
+              </div>
+              <div class="case-summary-box">
+                <h5><i class="fa-solid fa-list-check"></i> 주요 탐구 및 실천 내용</h5>
+                <ul>
+                  <li><strong>창작 vs 표절 구분 :</strong> 변형의 정도와 새로운 가치 창출, 저작자 표시 조건 탐구</li>
+                  <li><strong>실천 원칙 :</strong> "나는 원작의 이용 조건을 확인하고 나의 생각을 더해 표현하겠다"</li>
+                  <li><strong>실천 산출물 :</strong> 저작권 조건을 준수한 학교 행사 홍보물 리믹스 및 저학년을 위한 출처 가이드 제작</li>
+                </ul>
+              </div>
+              <div class="student-quote">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"남의 것을 그대로 베끼는 것보다 내 생각을 더하니 진짜 내 작품 같아서 뿌듯했고, 제 작품에도 이용 허락 표시를 붙였어요!" - 5학년 박OO 학생</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5학년 사례 카드 2 (캠페인) -->
+          <div class="case-card" data-category="grade5">
+            <div class="case-header bg-purple">
+              <span class="case-grade-badge">5학년 | 디지털 정서 & 참여</span>
+              <h3>작은 목소리를 모아, 함께 바꾸는 우리</h3>
+              <p class="case-question"><i class="fa-solid fa-circle-question"></i> "디지털로 함께 행동하면 우리 공동체를 어떻게 바꿀 수 있을까?"</p>
+            </div>
+            <div class="case-body">
+              <div class="case-info-row">
+                <span><strong>연계 교과:</strong> 국어, 도덕 (학교자율시간)</span>
+                <span><strong>차시:</strong> 7차시</span>
+              </div>
+              <div class="case-summary-box">
+                <h5><i class="fa-solid fa-list-check"></i> 주요 탐구 및 실천 내용</h5>
+                <ul>
+                  <li><strong>방관자에서 업스탠더(Upstander)로 :</strong> 온라인 괴롭힘과 불편을 외면하지 않고 참여하는 방법 탐구</li>
+                  <li><strong>참여 원칙 :</strong> 누구도 탓하지 않고, 신뢰할 수 있는 정보로, 모두가 참여하는 방법 열기</li>
+                  <li><strong>실천 산출물 :</strong> 전교생 대상 「작은 시민, 큰 변화」 디지털 캠페인 및 인증 챌린지 주도</li>
+                </ul>
+              </div>
+              <div class="student-quote">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"불편한 게 있어도 그냥 참았는데, 디지털로 함께 알리니 우리 반과 학교 전체가 바뀔 수 있다는 것을 알았어요!" - 5학년 김OO 학생</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 교과 연계 (과학) -->
+          <div class="case-card" data-category="subject">
+            <div class="case-header bg-indigo">
+              <span class="case-grade-badge">교과 연계 | 과학 전담 수업 적용</span>
+              <h3>AI와 함께 건강을 지키는 법 (인체와 생성형 AI)</h3>
+              <p class="case-question"><i class="fa-solid fa-circle-question"></i> "우리 몸과 건강에 관한 AI 답변을 어떻게 비판적으로 활용할까?"</p>
+            </div>
+            <div class="case-body">
+              <div class="case-info-row">
+                <span><strong>연계 교과:</strong> 5·6학년 과학</span>
+                <span><strong>차시:</strong> 7차시</span>
+              </div>
+              <div class="case-summary-box">
+                <h5><i class="fa-solid fa-list-check"></i> 주요 탐구 및 실천 내용</h5>
+                <ul>
+                  <li><strong>AI 답변 vs 과학 교과서 대조 :</strong> 인체 소화·순환 기관 AI 답변의 오류와 환각(Hallucination) 검증</li>
+                  <li><strong>역할 분담 원칙 :</strong> "AI는 아이디어와 정보를 제안하고, 최종 판단과 책임은 사람이 진다"</li>
+                  <li><strong>실천 산출물 :</strong> 우리 반만의 사람-AI 건강한 관계 원칙 수립 및 건강 정보 판별 가이드 제작</li>
+                </ul>
+              </div>
+              <div class="student-quote">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"AI가 말해준다고 다 정답이 아니었어요. 과학책과 비교해서 스스로 판단해야 진짜 안전한 지식이 된다는 걸 배웠습니다." - 5학년 박OO 학생</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 모바일 전용 페이저 -->
+        <div class="mobile-section-pager">
+          <button type="button" class="btn-mobile-prev" data-prev="#framework">
+            <i class="fa-solid fa-arrow-left"></i> <span>이전: 체계</span>
+          </button>
+          <button type="button" class="btn-mobile-next" data-next="#results">
+            <span>다음: 연구 성과·검증</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 연구 성과 및 검증 탭 -->
+    <section class="section-container bg-warm-light" id="results">
+      <div class="container">
+        <div class="section-heading text-center">
+          <span class="section-tag"><i class="fa-solid fa-square-poll-vertical"></i> 연구 검증 및 확산 성과</span>
+          <h2 class="section-title">데이터로 증명된 디지털시민 역량의 성장</h2>
+          <p class="section-desc">2~5학년 78명을 대상으로 한 사전-사후 검사(t-검정) 결과와 학교 안팎의 확산 성과입니다.</p>
+        </div>
+
+        <!-- 양적 분석 결과 카드 및 통계 차트 -->
+        <div class="stats-overview-panel">
+          <div class="panel-left">
+            <span class="sub-pill"><i class="fa-solid fa-chart-column"></i> 사전·사후 대응표본 t-검정 결과</span>
+            <h3>모든 영역에서 통계적으로 유의미한 성장 (p < .001)</h3>
+            <p>
+              단순히 기기를 다루는 기능 수준을 넘어, 정보 판별과 윤리적 판단, 감정 조절 및 협력적 참여 역량이 전 학년에 걸쳐 뚜렷하게 신장되었습니다.
+            </p>
+
+            <div class="t-test-metrics">
+              <div class="metric-item">
+                <div class="metric-val">+0.52<small>점</small></div>
+                <div class="metric-name">디지털 리터러시 역량</div>
+                <div class="metric-detail">3.08점 → 3.60점 (t=13.18, p<.001) <span class="badge-max">최대 향상</span></div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val">+0.51<small>점</small></div>
+                <div class="metric-name">디지털 참여 역량</div>
+                <div class="metric-detail">3.15점 → 3.66점 (공동체 참여·업스탠더 확장)</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val">+0.41<small>점</small></div>
+                <div class="metric-name">디지털 창의·혁신 역량</div>
+                <div class="metric-detail">3.31점 → 3.72점 (저작권 존중 창작 활동)</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-val">+0.34<small>점</small></div>
+                <div class="metric-name">디지털 정서 역량</div>
+                <div class="metric-detail">3.44점 → 3.78점 (감정 인식 및 배려 댓글)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-right">
+            <div class="chart-box">
+              <div class="chart-header">
+                <h5>사전 vs 사후 역량 비교 (5점 만점)</h5>
+                <span class="legend"><span class="dot pre"></span>사전 <span class="dot post"></span>사후</span>
+              </div>
+              <div class="bar-chart-wrap">
+                <!-- 리터러시 -->
+                <div class="chart-bar-group">
+                  <div class="group-bars">
+                    <div class="bar pre" style="height: 61.6%;" title="사전 3.08점"><span>3.08</span></div>
+                    <div class="bar post" style="height: 72.0%;" title="사후 3.60점"><span>3.60</span></div>
+                  </div>
+                  <span class="bar-label">리터러시</span>
+                </div>
+                <!-- 창의혁신 -->
+                <div class="chart-bar-group">
+                  <div class="group-bars">
+                    <div class="bar pre" style="height: 66.2%;" title="사전 3.31점"><span>3.31</span></div>
+                    <div class="bar post" style="height: 74.4%;" title="사후 3.72점"><span>3.72</span></div>
+                  </div>
+                  <span class="bar-label">창의·혁신</span>
+                </div>
+                <!-- 정서 -->
+                <div class="chart-bar-group">
+                  <div class="group-bars">
+                    <div class="bar pre" style="height: 68.8%;" title="사전 3.44점"><span>3.44</span></div>
+                    <div class="bar post" style="height: 75.6%;" title="사후 3.78점"><span>3.78</span></div>
+                  </div>
+                  <span class="bar-label">정서</span>
+                </div>
+                <!-- 참여 -->
+                <div class="chart-bar-group">
+                  <div class="group-bars">
+                    <div class="bar pre" style="height: 63.0%;" title="사전 3.15점"><span>3.15</span></div>
+                    <div class="bar post" style="height: 73.2%;" title="사후 3.66점"><span>3.66</span></div>
+                  </div>
+                  <span class="bar-label">참여</span>
+                </div>
+              </div>
+              <p class="chart-footnote">* 2~5학년 총 78명 대상 대응표본 t-검정 실시 결과</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3대 실천 확산 네트워크 -->
+        <div class="spread-network-grid">
+          <div class="net-card">
+            <div class="net-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+            <h4>교원과 함께 넓히기</h4>
+            <ul>
+              <li><strong>학년별 씨앗교사 :</strong> 수업 자료 사전 안내 및 동학년 적용 점검</li>
+              <li><strong>교원학습공동체 :</strong> 격주 협의로 루브릭 수정 및 수업 나눔</li>
+              <li><strong>학교 안 직무연수 :</strong> 2026 남부 윤중초 학생중심 탐구수업(20시간)</li>
+              <li><strong>학습키트 디지털 아카이브 :</strong> 지도안·활동지·루브릭 공유</li>
+            </ul>
+          </div>
+
+          <div class="net-card">
+            <div class="net-icon"><i class="fa-solid fa-users"></i></div>
+            <h4>학생과 함께 키우기</h4>
+            <ul>
+              <li><strong>BIG HEROES 축제 :</strong> 학년 내 체험부스 & 전교생 디지털 축제 연계</li>
+              <li><strong>디지털시민 캠페인 :</strong> 「작은 시민, 큰 변화」 학생 자치 기획</li>
+              <li><strong>학교 게시판 전시 :</strong> 1차 산출물과 재표현물 나란히 비교 전시</li>
+              <li><strong>온라인 갤러리 :</strong> 패들렛 연동 QR코드로 전교생 소통 답글</li>
+            </ul>
+          </div>
+
+          <div class="net-card">
+            <div class="net-icon"><i class="fa-solid fa-earth-asia"></i></div>
+            <h4>학교 밖으로 나누기</h4>
+            <ul>
+              <li><strong>컨설팅 공개수업 3회 :</strong> 사전-사후 협의로 지속적 수업 개선</li>
+              <li><strong>2026 AI·디지털 러닝 콘페스타(마곡) :</strong> 운영 성과 발표 (7.24~25)</li>
+              <li><strong>다더함 교육활동 전시 :</strong> 2차례 타교 교원 대상 수업 사례 출품</li>
+              <li><strong>자체 홈페이지 & QR 아카이브 :</strong> 누구나 내려받는 자료 공유</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 모바일 전용 페이저 -->
+        <div class="mobile-section-pager">
+          <button type="button" class="btn-mobile-prev" data-prev="#cases">
+            <i class="fa-solid fa-arrow-left"></i> <span>이전: 실천사례</span>
+          </button>
+          <button type="button" class="btn-mobile-next" data-next="#archive">
+            <span>다음: 학습자료실</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. 학습자료 드라이브 섹션 (학습자료 단일 메뉴 연동) -->
+    <section class="section-container" id="archive">
+      <div class="container">
+        <div class="section-heading text-center">
+          <span class="section-tag"><i class="fa-brands fa-google-drive"></i> 학습자료 저장소</span>
+          <h2 class="section-title">BIG HEROES 수업·탐구 학습자료 드라이브</h2>
+          <p class="section-desc">
+            학생들의 탐구활동지와 교수·학습 과정안 등 모든 학습자료를 구글 드라이브에서 간편하게 확인하고 내려받으실 수 있습니다.
+          </p>
+        </div>
+
+        <!-- 단일 학습자료 전용 대형 배너 카드 -->
+        <div class="single-learning-drive-card">
+          <div class="single-drive-icon">
+            <i class="fa-brands fa-google-drive"></i>
+          </div>
+          <div class="single-drive-body">
+            <div class="single-drive-badge-wrap">
+              <span class="badge-drive"><i class="fa-solid fa-folder-open"></i> 전 학년 학습자료실</span>
+              <span class="badge-drive-sub">2·3·4·5학년 및 과학교과 통합</span>
+            </div>
+            <h3>학생 탐구활동지 및 수업 자료집 모음</h3>
+            <p class="single-drive-desc">
+              • 학년별 교수·학습 지도안 및 차시별 탐구 수업 전략<br>
+              • 정보 신호등 판별지, 출처 이름표 양식, 저작권 자화상 제작 키트 등 학생 활동지<br>
+              • 과정중심 평가 루브릭 및 학생 산출물 갤러리 원본 자료 수록
+            </p>
+            <div class="drive-current-url" id="driveUrlDisplay">
+              <i class="fa-solid fa-link"></i> <span id="currentDriveLinkText">https://drive.google.com/drive/folders/...</span>
+            </div>
+          </div>
+          <div class="single-drive-action">
+            <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="btn btn-drive-large" id="mainDriveLinkBtn">
+              <i class="fa-solid fa-download"></i> 학습자료 드라이브 열기
+            </a>
+            <!-- 드라이브 주소 변경은 관리자 페이지(admin.html)에서만 가능 -->
+          </div>
+        </div>
+
+        <!-- 모바일 전용 페이저 -->
+        <div class="mobile-section-pager">
+          <button type="button" class="btn-mobile-prev" data-prev="#results">
+            <i class="fa-solid fa-arrow-left"></i> <span>이전: 성과·검증</span>
+          </button>
+          <button type="button" class="btn-mobile-next" data-next="#feedback">
+            <span>다음: 소통과 나눔</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 소통과 나눔 (방문자 한마디 롤링페이퍼) -->
+    <section class="section-container" id="feedback">
+      <div class="container">
+        <div class="section-heading text-center">
+          <span class="section-tag"><i class="fa-regular fa-comment-dots"></i> 소통과 나눔</span>
+          <h2 class="section-title">응원과 소통 한마디 롤링페이퍼</h2>
+          <p class="section-desc">
+            연구를 살펴보신 소감이나 따뜻한 응원의 메시지를 자유롭게 남겨주세요.
+          </p>
+        </div>
+
+        <div class="feedback-wrapper">
+          <!-- 작성 폼 -->
+          <div class="feedback-form-card">
+            <h4><i class="fa-solid fa-pen-nib"></i> 따뜻한 한마디 남기기</h4>
+            <form id="feedbackForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="fbAuthor">작성자 성함</label>
+                  <input type="text" id="fbAuthor" placeholder="예: 선생님 성함 또는 방문자" required>
+                </div>
+                <div class="form-group">
+                  <label for="fbAffiliation">소속</label>
+                  <input type="text" id="fbAffiliation" placeholder="예: 서울남부교육지원청 또는 학교명" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="fbContent">응원 및 나눔 내용</label>
+                <textarea id="fbContent" rows="4" placeholder="연구와 학생들의 성장에 대한 따뜻한 소감이나 응원을 남겨주세요." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="fa-solid fa-paper-plane"></i> 한마디 등록하기
+              </button>
+            </form>
+          </div>
+
+          <!-- 등록된 피드백 목록 -->
+          <div class="feedback-list-wrap">
+            <div class="feedback-list-header">
+              <h4><i class="fa-solid fa-comments"></i> 전해주신 따뜻한 말씀 (<span id="feedbackCount">3</span>)</h4>
+            </div>
+            <div class="feedback-cards-scroll" id="feedbackCardsContainer">
+              <!-- JS에서 렌더링 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 모바일 전용 페이저 -->
+        <div class="mobile-section-pager">
+          <button type="button" class="btn-mobile-prev" data-prev="#archive">
+            <i class="fa-solid fa-arrow-left"></i> <span>이전: 학습자료실</span>
+          </button>
+          <button type="button" class="btn-mobile-next" data-next="#home">
+            <span>첫 화면(홈)으로</span> <i class="fa-solid fa-arrow-up"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 푸터 (학교명, 제작: 윤중초 김도현 명시 및 조용한 관리자 링크) -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="badge-b">B</span>
+            <span class="badge-i">I</span>
+            <span class="badge-g">G</span>
+            <strong class="heroes-text">HEROES</strong>
+          </div>
+          <p class="footer-tagline">2026학년도 서울특별시남부교육지원청 학교교육력 제고 연구 [창의미래교육영역]</p>
+          <p class="footer-topic"><strong>연구 주제 :</strong> "BIG HEROES 학생중심 탐구프로그램으로 디지털시민되기"</p>
+        </div>
+
+        <div class="footer-info-cards">
+          <div class="f-info-box">
+            <i class="fa-solid fa-school"></i>
+            <div>
+              <span class="label">소속 학교</span>
+              <strong class="val">서울윤중초등학교</strong>
+            </div>
+          </div>
+          <div class="f-info-box">
+            <i class="fa-solid fa-user-check"></i>
+            <div>
+              <span class="label">홈페이지 제작 및 연구</span>
+              <strong class="val">제작 : 윤중초 김도현</strong>
+            </div>
+          </div>
+          <div class="f-info-box">
+            <i class="fa-solid fa-people-group"></i>
+            <div>
+              <span class="label">연구팀</span>
+              <strong class="val">김승현(팀장), 김도현, 유지혜, 정보람, 나연희</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 서울윤중초등학교 BIG HEROES 연구팀. All rights reserved.</p>
+        <div class="footer-admin-link">
+          <span>제작 : 윤중초 김도현</span>
+          <span class="dot-sep">•</span>
+          <!-- 별도 관리자 페이지 링크 (요청사항: 일반 방문자에게는 띄지 않게 처리) -->
+          <a href="admin.html" class="link-admin" title="선생님 전용 관리 페이지 (사진 등록·드라이브 주소 설정)">
+            <i class="fa-solid fa-gear"></i> 관리자 페이지
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 모달 1: 연구 3분 핵심 요약 브리핑 모달 -->
+  <div class="modal-overlay" id="briefingModal">
+    <div class="modal-card modal-large">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span class="modal-badge"><i class="fa-solid fa-award"></i> 연구 한눈에 보기</span>
+          <h3>BIG HEROES 연구 3분 완벽 가이드</h3>
+        </div>
+        <button class="modal-close" id="closeBriefingBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="briefing-box">
+          <div class="brief-item">
+            <span class="brief-num">01</span>
+            <div>
+              <h4>연구의 독창성: "기능 습득을 넘어 판단의 기준 자체를 탐구"</h4>
+              <p>대다수의 디지털 교육이 도구 사용법에 머무는 한계를 극복하여, '정보 신호등'과 '출처 카드'처럼 학생 스스로 디지털 생활을 판단하는 기준을 직접 탐구하고 실천 원칙을 세우도록 재설계하였습니다.</p>
+            </div>
+          </div>
+
+          <div class="brief-item">
+            <span class="brief-num">02</span>
+            <div>
+              <h4>이원화된 학생 주도성 확장 모델 (GRR 접목)</h4>
+              <p>H(삶과 연결) → E(탐구) → R(돌아보기) → O(실천) → E(평가) → S(확산) 절차를 거치며 교사의 안내는 줄고 학생의 선택권이 커지며, 2학년(기초)에서 5학년(공동체 캠페인)으로 갈수록 학생의 주도권이 체계적으로 확장됩니다.</p>
+            </div>
+          </div>
+
+          <div class="brief-item">
+            <span class="brief-num">03</span>
+            <div>
+              <h4>검증된 실천 성과 (t-검정 p < .001)</h4>
+              <p>2~5학년 78명 분석 결과, 디지털 리터러시 역량(+0.52점, t=13.18), 참여 역량(+0.51점) 등 4대 핵심 역량 전 영역에서 매우 유의미한 질적·양적 변화를 입증하였습니다.</p>
+            </div>
+          </div>
+
+          <div class="brief-item">
+            <span class="brief-num">04</span>
+            <div>
+              <h4>학교 안팎을 잇는 지속 가능한 나눔</h4>
+              <p>학년별 씨앗교사, AI·디지털 축제, 전교생 캠페인, 그리고 마곡 AI·디지털 러닝 콘페스타 및 다더함 전시를 통해 교외로 교육력을 널리 확산하고 있습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#archive" class="btn btn-secondary modal-close-action" id="briefingGoArchiveBtn">
+          <i class="fa-brands fa-google-drive"></i> 전체 자료 드라이브에서 확인
+        </a>
+        <button class="btn btn-primary" id="confirmBriefingBtn">확인 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달 2(구글 드라이브 주소 설정)는 관리자 페이지(admin.html)로 이동했습니다. -->
+
+  <!-- 토스트 알림 메시지 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
