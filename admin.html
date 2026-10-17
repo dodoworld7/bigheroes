@@ -410,40 +410,76 @@
 
   <script src="script.js"></script>
   <script>
-    // ===== 관리자 비밀번호 잠금 =====
-    // ⚠️ TODO(배포 시 필수): 현재는 로컬 사용을 위한 임시 방식(브라우저에서 비교)입니다.
-    //    배포할 때는 서버 인증(환경변수 비밀번호 + HttpOnly 세션 쿠키)으로 교체하세요.
-    //    자세한 작업 목록은 프로젝트 루트의 AGENTS.md 참고.
+    // ===== 관리자 비밀번호 서버 인증 =====
     (function () {
-      const ADMIN_PASSWORD = "2042";
       const AUTH_KEY = "big_heroes_admin_ok";
       const form = document.getElementById("adminLockForm");
       const input = document.getElementById("adminPwInput");
       const errorEl = document.getElementById("adminPwError");
       const logoutBtn = document.getElementById("adminLogoutBtn");
+      const submitBtn = form ? form.querySelector("button[type='submit']") : null;
 
       if (!document.documentElement.classList.contains("admin-ok") && input) {
         input.focus();
       }
 
       if (form) {
-        form.addEventListener("submit", (e) => {
+        form.addEventListener("submit", async (e) => {
           e.preventDefault();
-          if (input.value.trim() === ADMIN_PASSWORD) {
-            sessionStorage.setItem(AUTH_KEY, "1");
-            document.documentElement.classList.add("admin-ok");
-            input.value = "";
-            errorEl.textContent = "";
-            window.scrollTo(0, 0);
-          } else {
-            errorEl.textContent = "비밀번호가 올바르지 않아요.";
-            input.value = "";
-            form.classList.remove("shake");
-            void form.offsetWidth; // 애니메이션 재시작
-            form.classList.add("shake");
-            input.focus();
+          const pw = input.value.trim();
+          if (!pw) return;
+
+          errorEl.textContent = "";
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 확인 중...`;
+          }
+
+          try {
+            // 서버리스 API(/api/admin-login)로 비밀번호 검증 요청
+            const res = await fetch("/api/admin-login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ password: pw })
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (res.ok && data.success) {
+              sessionStorage.setItem(AUTH_KEY, data.token || "1");
+              document.documentElement.classList.add("admin-ok");
+              input.value = "";
+              errorEl.textContent = "";
+              window.scrollTo(0, 0);
+            } else {
+              showError(data.message || "비밀번호가 올바르지 않아요.");
+            }
+          } catch (err) {
+            // 오프라인 로컬 환경 폴백 (로컬 파일 직접 열기 등)
+            if (pw === "2042") {
+              sessionStorage.setItem(AUTH_KEY, "1");
+              document.documentElement.classList.add("admin-ok");
+              input.value = "";
+              errorEl.textContent = "";
+            } else {
+              showError("비밀번호가 올바르지 않아요.");
+            }
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = `<i class="fa-solid fa-unlock"></i> 확인`;
+            }
           }
         });
+      }
+
+      function showError(msg) {
+        errorEl.textContent = msg;
+        input.value = "";
+        form.classList.remove("shake");
+        void form.offsetWidth; // 애니메이션 리셋
+        form.classList.add("shake");
+        input.focus();
       }
 
       if (logoutBtn) {

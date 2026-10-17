@@ -15,6 +15,29 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
+  // 1. 관리자 로그인 API 처리
+  if (req.url === '/api/admin-login' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body || '{}');
+        const expected = process.env.ADMIN_PASSWORD || '2042';
+        if (String(parsed.password).trim() === expected) {
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, token: 'local_' + Date.now() }));
+        } else {
+          res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, message: '비밀번호가 올바르지 않아요.' }));
+        }
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, message: '잘못된 요청입니다.' }));
+      }
+    });
+    return;
+  }
+
   let filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
   const ext = path.extname(filePath);
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
