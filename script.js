@@ -8,8 +8,15 @@
 // ==========================================================================
 const DEFAULT_DRIVE_URL = "https://drive.google.com/drive/folders/19chuLwdxRB8cpoxmXIoeWlzEubEHQZ0P";
 
-// 기본 활동 사진 데이터 (보고서에 등장한 실제 활동 기반의 감성 일러스트/사진)
+// 기본 활동 사진 데이터 (보고서에 등장한 실제 활동 기반의 사진 및 활동)
 const DEFAULT_PHOTOS = [
+  {
+    id: "p_robot_5th",
+    title: "[5학년] 언플러그드 로봇 활용 수업",
+    grade: "5학년",
+    desc: "코보블록을 이용하여 프로그래밍 이해하기",
+    imageUrl: "images/class_5th_robot.jpg"
+  },
   {
     id: "p1",
     title: "[2학년] 달라지는 검색창 & 나만의 검색어 규칙",
@@ -113,7 +120,19 @@ class AppState {
       return DEFAULT_PHOTOS;
     }
     try {
-      return JSON.parse(stored);
+      let parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        parsed = DEFAULT_PHOTOS;
+        localStorage.setItem("big_heroes_photos", JSON.stringify(parsed));
+      } else {
+        // 실제 수업 사진이 없으면 최상단에 자동 복원 보존
+        const hasRobot = parsed.some(p => p.imageUrl && p.imageUrl.includes("class_5th_robot"));
+        if (!hasRobot) {
+          parsed.unshift(DEFAULT_PHOTOS[0]);
+          localStorage.setItem("big_heroes_photos", JSON.stringify(parsed));
+        }
+      }
+      return parsed;
     } catch (e) {
       return DEFAULT_PHOTOS;
     }
