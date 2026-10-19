@@ -6,7 +6,7 @@
 // ==========================================================================
 // 1. 디폴트 데이터 세트 (초기 로딩용)
 // ==========================================================================
-const DEFAULT_DRIVE_URL = "https://drive.google.com/drive/folders/1abcDEfgHIjklMNop-QRStuvWXyz?usp=sharing";
+const DEFAULT_DRIVE_URL = "https://drive.google.com/drive/folders/19chuLwdxRB8cpoxmXIoeWlzEubEHQZ0P";
 
 // 기본 활동 사진 데이터 (보고서에 등장한 실제 활동 기반의 감성 일러스트/사진)
 const DEFAULT_PHOTOS = [
@@ -79,7 +79,12 @@ class AppState {
   }
 
   static getDriveUrl() {
-    return localStorage.getItem("big_heroes_drive_url") || DEFAULT_DRIVE_URL;
+    const stored = localStorage.getItem("big_heroes_drive_url");
+    if (!stored || stored.includes("1abcDEfgHIjklMNop")) {
+      localStorage.setItem("big_heroes_drive_url", DEFAULT_DRIVE_URL);
+      return DEFAULT_DRIVE_URL;
+    }
+    return stored;
   }
 
   static saveDriveUrl(url) {
