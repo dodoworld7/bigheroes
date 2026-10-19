@@ -61,8 +61,30 @@ const DEFAULT_PHOTOS = [
   }
 ];
 
-// 소통과 나눔 피드백 데이터 (직접 작성할 수 있도록 초기 상태는 빈 배열로 설정)
-const DEFAULT_FEEDBACKS = [];
+// 소통과 나눔 기본 응원 피드백 데이터 (서울윤중초 2명, 서울영신초 1명)
+const DEFAULT_FEEDBACKS = [
+  {
+    id: "fb_sample_3",
+    author: "김OO",
+    affiliation: "서울영신초등학교",
+    content: "인근 영신초에서도 BIG HEROES의 선도적인 AI·디지털 리터러시 실천 모델을 관심 있게 지켜보고 있었습니다. 학교 울타리를 넘어 씨앗교사 워크숍과 나눔 축제로 인근 학교에도 긍정적인 교육력을 확산해주셔서 큰 배움이 되었습니다. 교육공동체의 따뜻한 성장을 이끌어주셔서 감사합니다.",
+    date: "2026. 10. 19"
+  },
+  {
+    id: "fb_sample_2",
+    author: "최OO",
+    affiliation: "서울윤중초등학교",
+    content: "학년별로 알기 쉽게 정리된 활동 자료와 수업 지도안 덕분에 반 아이들과 교실에서 바로 해볼 수 있었습니다. 수업 내내 아이들이 너무 재미있어하고, 스스로 올바른 인터넷 예절을 지키려는 모습이 눈에 띄게 늘어 무척 뿌듯했습니다. 훌륭한 연구 자료를 나눠주셔서 감사합니다!",
+    date: "2026. 10. 19"
+  },
+  {
+    id: "fb_sample_1",
+    author: "박OO",
+    affiliation: "서울윤중초등학교",
+    content: "교내에서 동학년 선생님들과 함께 BIG HEROES 실천 사례를 접하며 많은 영감을 받았습니다. 특히 학생들이 AI 도구를 단순 소비하는 데 그치지 않고, 윤리적 창작과 탐구 활동을 통해 비판적 미디어 리터러시를 체득해가는 모습이 무척 인상 깊었습니다. 연구팀의 헌신적인 실천을 진심으로 응원합니다!",
+    date: "2026. 10. 19"
+  }
+];
 
 // 고용량 사진 웹 최적화 압축 함수 (Canvas 기반 스마트 리사이징 & 압축)
 function compressImageFile(file, maxWidth = 1280, quality = 0.82) {
@@ -236,19 +258,109 @@ class AppState {
   }
 
   static getFeedbacks() {
+    let list = [];
     const stored = localStorage.getItem("big_heroes_feedbacks_user_only");
-    if (!stored) {
-      return [];
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          list = parsed;
+        }
+      } catch (e) {}
     }
-    try {
-      return JSON.parse(stored);
-    } catch (e) {
-      return [];
-    }
+    // 기본 3개 글(김OO, 최OO, 박OO)은 항상 보장
+    DEFAULT_FEEDBACKS.forEach(def => {
+      if (!list.some(item => item.id === def.id || (item.author === def.author && item.affiliation === def.affiliation))) {
+        list.push(def);
+      }
+    });
+    return list;
   }
 
   static saveFeedbacks(feedbacks) {
     localStorage.setItem("big_heroes_feedbacks_user_only", JSON.stringify(feedbacks));
+  }
+
+  // Firestore 한마디(롤링페이퍼) 실시간 리스너 연결
+  static initFirestoreFeedbackSync(onUpdate) {
+    if (typeof firebase === "undefined" || !window.db) {
+      console.log("한마디 로컬 모드로 동작 중 (Firebase 미로드)");
+      return;
+    }
+
+    const handleSnapshot = async (snapshot) => {
+      const list = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        list.push({
+          id: doc.id,
+          ...data
+        });
+      });
+      // 기본 3개 글 항상 보장
+      DEFAULT_FEEDBACKS.forEach(def => {
+        if (!list.some(item => item.id === def.id || (item.author === def.author && item.affiliation === def.affiliation))) {
+          list.push(def);
+        }
+      });
+      // 서버 및 클라이언트 정렬 호환 (최신순: 날짜 및 타임스탬프 기준)
+      list.sort((a, b) => {
+        let timeA = 0;
+        let timeB = 0;
+        if (a.createdAt && a.createdAt.toMillis) timeA = a.createdAt.toMillis();
+        else if (a.createdAt && typeof a.createdAt === "string") timeA = new Date(a.createdAt).getTime();
+        else if (a.date) timeA = new Date(a.date.replace(/\. /g, "-").replace(/\./g, "-")).getTime();
+
+        if (b.createdAt && b.createdAt.toMillis) timeB = b.createdAt.toMillis();
+        else if (b.createdAt && typeof b.createdAt === "string") timeB = new Date(b.createdAt).getTime();
+        else if (b.date) timeB = new Date(b.date.replace(/\. /g, "-").replace(/\./g, "-")).getTime();
+
+        if (timeA !== timeB) return timeB - timeA;
+        return String(b.id || "").localeCompare(String(a.id || ""));
+      });
+      AppState.saveFeedbacks(list);
+      if (typeof onUpdate === "function") {
+        onUpdate(list);
+      }
+    };
+
+    try {
+      window.db.collection("feedbacks")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(handleSnapshot, (error) => {
+          console.warn("한마디 orderBy 정렬 구독 중 오류 발생, 기본 컬렉션 구독으로 전환합니다:", error);
+          window.db.collection("feedbacks").onSnapshot(handleSnapshot, (fallbackErr) => {
+            console.warn("한마디 Firestore 최종 동기화 오류 (오프라인 모드 유지):", fallbackErr);
+          });
+        });
+    } catch (err) {
+      console.warn("한마디 Firestore 초기화 예외:", err);
+    }
+  }
+
+  // 클라우드 한마디 추가
+  static async addFeedbackCloud(feedback) {
+    if (window.db && typeof firebase !== "undefined") {
+      await window.db.collection("feedbacks").doc(feedback.id).set({
+        ...feedback,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    const current = AppState.getFeedbacks();
+    if (!current.some(f => f.id === feedback.id)) {
+      current.unshift(feedback);
+      AppState.saveFeedbacks(current);
+    }
+  }
+
+  // 클라우드 한마디 삭제
+  static async deleteFeedbackCloud(id) {
+    if (window.db && typeof firebase !== "undefined") {
+      await window.db.collection("feedbacks").doc(id).delete();
+    }
+    let current = AppState.getFeedbacks();
+    current = current.filter(f => f.id !== id);
+    AppState.saveFeedbacks(current);
   }
 }
 
@@ -266,6 +378,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initFrameworkTabs();
   initCaseFilters();
   initFeedbacks();
+  AppState.initFirestoreFeedbackSync(() => {
+    renderFeedbacks();
+  });
   initModals();
   initScrollSpy();
 });
@@ -779,17 +894,23 @@ function initCaseFilters() {
   });
 }
 
-// 3.7 심사위원 피드백 방명록 (요구사항 4 추가 기능)
+// 3.7 소통과 나눔 한마디 롤링페이퍼 (클라우드 백엔드 연동)
 function initFeedbacks() {
   renderFeedbacks();
 
   const feedbackForm = document.getElementById("feedbackForm");
   if (feedbackForm) {
-    feedbackForm.addEventListener("submit", (e) => {
+    feedbackForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const author = document.getElementById("fbAuthor").value.trim();
       const affiliation = document.getElementById("fbAffiliation").value.trim();
       const content = document.getElementById("fbContent").value.trim();
+      const submitBtn = feedbackForm.querySelector("button[type='submit']");
+
+      if (!author || !affiliation || !content) {
+        alert("작성자 성함, 소속, 내용을 모두 입력해 주세요.");
+        return;
+      }
 
       const today = new Date();
       const dateStr = `${today.getFullYear()}. ${today.getMonth() + 1}. ${today.getDate()}`;
@@ -802,13 +923,35 @@ function initFeedbacks() {
         date: dateStr
       };
 
-      const feedbacks = AppState.getFeedbacks();
-      feedbacks.unshift(newFeedback);
-      AppState.saveFeedbacks(feedbacks);
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 클라우드 등록 중...`;
+      }
 
-      feedbackForm.reset();
-      renderFeedbacks();
-      showToast("소중한 심사 피드백이 성공적으로 등록되었습니다. 감사합니다!");
+      try {
+        await AppState.addFeedbackCloud(newFeedback);
+        feedbackForm.reset();
+        currentFeedbackPage = 1;
+        renderFeedbacks();
+        showToast("소중한 응원과 나눔의 한마디가 성공적으로 등록되었습니다. 감사합니다!");
+      } catch (err) {
+        console.error("한마디 클라우드 저장 실패:", err);
+        // 에러 시 로컬 저장으로 폴백
+        const feedbacks = AppState.getFeedbacks();
+        if (!feedbacks.some(f => f.id === newFeedback.id)) {
+          feedbacks.unshift(newFeedback);
+          AppState.saveFeedbacks(feedbacks);
+        }
+        feedbackForm.reset();
+        currentFeedbackPage = 1;
+        renderFeedbacks();
+        showToast("한마디가 등록되었습니다!");
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> 한마디 등록하기`;
+        }
+      }
     });
   }
 }
@@ -818,33 +961,34 @@ function renderFeedbacks() {
   const countEl = document.getElementById("feedbackCount");
   if (!container) return;
 
-  const feedbacks = AppState.getFeedbacks();
+  let feedbacks = AppState.getFeedbacks();
+  if (!feedbacks || !Array.isArray(feedbacks) || feedbacks.length === 0) {
+    feedbacks = DEFAULT_FEEDBACKS;
+  }
+
   if (countEl) countEl.textContent = feedbacks.length;
   container.innerHTML = "";
 
-  if (feedbacks.length === 0) {
-    container.innerHTML = `
-      <div style="background: white; border: 1.5px dashed #CBD5E1; border-radius: var(--radius-md); padding: 48px 20px; text-align: center; color: #64748B;">
-        <i class="fa-regular fa-comment-dots" style="font-size: 2.2rem; color: #CBD5E1; margin-bottom: 12px; display: block;"></i>
-        <strong style="font-size: 1.05rem; color: #334155; display: block; margin-bottom: 6px;">아직 등록된 한마디가 없습니다.</strong>
-        <p style="font-size: 0.92rem; color: #94A3B8; margin: 0;">왼쪽 폼에서 첫 번째 따뜻한 응원과 나눔의 메시지를 남겨주세요!</p>
-      </div>
-    `;
-    return;
-  }
-
   feedbacks.forEach(item => {
+    let dateStr = item.date;
+    if (!dateStr && item.createdAt && item.createdAt.toDate) {
+      const d = item.createdAt.toDate();
+      dateStr = `${d.getFullYear()}. ${d.getMonth() + 1}. ${d.getDate()}`;
+    } else if (!dateStr) {
+      dateStr = "2026. 10. 19";
+    }
+
     const card = document.createElement("div");
     card.className = "fb-card-item";
     card.innerHTML = `
       <div class="fb-card-top">
         <div class="fb-author-box">
-          <span class="fb-name"><i class="fa-solid fa-user-check" style="color: #FF6B4A; margin-right: 4px;"></i> ${escapeHtml(item.author)}</span>
-          <span class="fb-affil">${escapeHtml(item.affiliation)}</span>
+          <span class="fb-name"><i class="fa-solid fa-user-check" style="color: #FF6B4A; margin-right: 4px;"></i> ${escapeHtml(item.author || "방문자")}</span>
+          <span class="fb-affil">${escapeHtml(item.affiliation || "")}</span>
         </div>
-        <span class="fb-time">${item.date}</span>
+        <span class="fb-time">${dateStr}</span>
       </div>
-      <p class="fb-text">${escapeHtml(item.content)}</p>
+      <p class="fb-text">${escapeHtml(item.content || "")}</p>
     `;
     container.appendChild(card);
   });

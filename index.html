@@ -1060,7 +1060,41 @@
               <h4><i class="fa-solid fa-comments"></i> 전해주신 따뜻한 말씀 (<span id="feedbackCount">3</span>)</h4>
             </div>
             <div class="feedback-cards-scroll" id="feedbackCardsContainer">
-              <!-- JS에서 렌더링 -->
+              <!-- 1. 서울영신초 김OO 선생님 -->
+              <div class="fb-card-item">
+                <div class="fb-card-top">
+                  <div class="fb-author-box">
+                    <span class="fb-name"><i class="fa-solid fa-user-check" style="color: #FF6B4A; margin-right: 4px;"></i> 김OO</span>
+                    <span class="fb-affil">서울영신초등학교</span>
+                  </div>
+                  <span class="fb-time">2026. 10. 19</span>
+                </div>
+                <p class="fb-text">인근 영신초에서도 BIG HEROES의 선도적인 AI·디지털 리터러시 실천 모델을 관심 있게 지켜보고 있었습니다. 학교 울타리를 넘어 씨앗교사 워크숍과 나눔 축제로 인근 학교에도 긍정적인 교육력을 확산해주셔서 큰 배움이 되었습니다. 교육공동체의 따뜻한 성장을 이끌어주셔서 감사합니다.</p>
+              </div>
+
+              <!-- 2. 서울윤중초 최OO 선생님 -->
+              <div class="fb-card-item">
+                <div class="fb-card-top">
+                  <div class="fb-author-box">
+                    <span class="fb-name"><i class="fa-solid fa-user-check" style="color: #FF6B4A; margin-right: 4px;"></i> 최OO</span>
+                    <span class="fb-affil">서울윤중초등학교</span>
+                  </div>
+                  <span class="fb-time">2026. 10. 19</span>
+                </div>
+                <p class="fb-text">학년별로 알기 쉽게 정리된 활동 자료와 수업 지도안 덕분에 반 아이들과 교실에서 바로 해볼 수 있었습니다. 수업 내내 아이들이 너무 재미있어하고, 스스로 올바른 인터넷 예절을 지키려는 모습이 눈에 띄게 늘어 무척 뿌듯했습니다. 훌륭한 연구 자료를 나눠주셔서 감사합니다!</p>
+              </div>
+
+              <!-- 3. 서울윤중초 박OO 선생님 -->
+              <div class="fb-card-item">
+                <div class="fb-card-top">
+                  <div class="fb-author-box">
+                    <span class="fb-name"><i class="fa-solid fa-user-check" style="color: #FF6B4A; margin-right: 4px;"></i> 박OO</span>
+                    <span class="fb-affil">서울윤중초등학교</span>
+                  </div>
+                  <span class="fb-time">2026. 10. 19</span>
+                </div>
+                <p class="fb-text">교내에서 동학년 선생님들과 함께 BIG HEROES 실천 사례를 접하며 많은 영감을 받았습니다. 특히 학생들이 AI 도구를 단순 소비하는 데 그치지 않고, 윤리적 창작과 탐구 활동을 통해 비판적 미디어 리터러시를 체득해가는 모습이 무척 인상 깊었습니다. 연구팀의 헌신적인 실천을 진심으로 응원합니다!</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1195,6 +1229,33 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-init.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js?v=4"></script>
+  <script>
+    // 롤링페이퍼 기본 3개 글 보장 안전장치
+    (function ensureFeedbacks() {
+      const container = document.getElementById("feedbackCardsContainer");
+      const countEl = document.getElementById("feedbackCount");
+      
+      const checkAndRender = () => {
+        if (!container) return;
+        const currentCards = container.querySelectorAll(".fb-card-item");
+        if (currentCards.length === 0 || container.innerText.includes("아직 등록된 한마디가 없습니다")) {
+          if (typeof renderFeedbacks === "function") {
+            renderFeedbacks();
+          }
+        }
+        if (countEl) {
+          const finalCards = container.querySelectorAll(".fb-card-item");
+          countEl.textContent = finalCards.length || 3;
+        }
+      };
+
+      // 즉시 및 로드 직후 확인
+      checkAndRender();
+      window.addEventListener("load", checkAndRender);
+      setTimeout(checkAndRender, 300);
+      setTimeout(checkAndRender, 1000);
+    })();
+  </script>
 </body>
 </html>

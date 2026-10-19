@@ -2421,15 +2421,12 @@ button {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: 480px;
-  overflow-y: auto;
-  padding-right: 6px;
 }
 
 .fb-card-item {
   background: white;
   border-radius: var(--radius-md);
-  padding: 20px;
+  padding: 16px 18px;
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-sm);
   position: relative;
@@ -2472,6 +2469,51 @@ button {
   font-size: 0.92rem;
   color: var(--text-main);
   line-height: 1.6;
+}
+
+/* 롤링페이퍼 페이지네이션 */
+.feedback-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.fb-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-subtle);
+  background: white;
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fb-page-btn:hover:not(:disabled) {
+  border-color: var(--coral-primary);
+  color: var(--coral-primary);
+  background: #FFF5F2;
+  transform: translateY(-1px);
+}
+
+.fb-page-btn.active {
+  background: var(--coral-primary);
+  border-color: var(--coral-primary);
+  color: white;
+  box-shadow: 0 3px 10px rgba(255, 107, 74, 0.3);
+}
+
+.fb-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ==========================================================================

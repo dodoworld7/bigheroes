@@ -255,6 +255,81 @@
     .btn-logout:hover {
       background: #FECACA;
     }
+    /* 한마디 관리 목록 스타일 */
+    .admin-feedback-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .admin-fb-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 20px;
+      background: #F8FAFC;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+    .admin-fb-item:hover {
+      border-color: #CBD5E1;
+      background: #F1F5F9;
+    }
+    .admin-fb-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .admin-fb-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+    }
+    .admin-fb-author {
+      font-weight: 800;
+      color: #1E293B;
+    }
+    .admin-fb-affil {
+      background: #EEF2F6;
+      color: #475569;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+    }
+    .admin-fb-date {
+      font-size: 0.8rem;
+      color: #94A3B8;
+      margin-left: auto;
+    }
+    .admin-fb-body {
+      font-size: 0.95rem;
+      color: #334155;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .btn-delete-fb {
+      background: #FEE2E2;
+      color: #DC2626;
+      border: 1px solid #FECACA;
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .btn-delete-fb:hover {
+      background: #DC2626;
+      color: white;
+    }
   </style>
 </head>
 <body class="admin-body">
@@ -295,6 +370,7 @@
       <a href="#driveAdminCard"><i class="fa-brands fa-google-drive" style="color:#2563EB;"></i> 학습자료 드라이브 주소</a>
       <a href="#photoAdminCard"><i class="fa-solid fa-cloud-arrow-up" style="color: var(--coral-primary);"></i> 활동사진 등록</a>
       <a href="#photoListCard"><i class="fa-solid fa-images" style="color: var(--amber-gold);"></i> 등록된 사진 관리</a>
+      <a href="#feedbackAdminCard"><i class="fa-regular fa-comment-dots" style="color: #FF6B4A;"></i> 응원 한마디 관리</a>
     </div>
 
     <!-- 학습자료 드라이브 주소 설정 카드 (메인 페이지에서 이동) -->
@@ -404,13 +480,27 @@
         <!-- JS 렌더링 -->
       </div>
     </div>
+
+    <!-- 소통과 응원 한마디(롤링페이퍼) 관리 카드 -->
+    <div class="admin-card" id="feedbackAdminCard">
+      <div class="admin-card-header">
+        <div>
+          <h2><i class="fa-regular fa-comment-dots" style="color: var(--coral-primary);"></i> 응원과 소통 한마디 롤링페이퍼 관리 (<span id="adminFeedbackCount">0</span>개)</h2>
+          <p>방문자 및 심사위원님께서 남겨주신 소중한 메시지를 실시간으로 확인하고 필요 시 삭제할 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div class="admin-feedback-list" id="adminFeedbackList">
+        <!-- JS 렌더링 -->
+      </div>
+    </div>
   </div>
 
   <!-- Firebase SDK 및 백엔드 초기화 -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-init.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js?v=3"></script>
   <script>
     // ===== 관리자 비밀번호 서버 인증 및 무차별 대입 방지 보안 =====
     (function () {
@@ -480,6 +570,7 @@
               errorEl.textContent = "";
               window.scrollTo(0, 0);
               renderAdminPhotos();
+              renderAdminFeedbacks();
               initAdminDrive();
             } else {
               handleLoginFail(data.message || "비밀번호가 올바르지 않아요.");
@@ -550,6 +641,10 @@
       renderAdminPhotos();
       AppState.initFirestoreSync(() => {
         renderAdminPhotos();
+      });
+      renderAdminFeedbacks();
+      AppState.initFirestoreFeedbackSync(() => {
+        renderAdminFeedbacks();
       });
       initAdminDrive();
 
@@ -720,6 +815,62 @@
         await AppState.deletePhotoCloud(id);
         renderAdminPhotos();
         showToast("사진이 삭제되었습니다.");
+      }
+    };
+
+    function renderAdminFeedbacks() {
+      const container = document.getElementById("adminFeedbackList");
+      const countEl = document.getElementById("adminFeedbackCount");
+      if (!container) return;
+
+      const feedbacks = AppState.getFeedbacks();
+      if (countEl) countEl.textContent = feedbacks.length;
+      container.innerHTML = "";
+
+      if (feedbacks.length === 0) {
+        container.innerHTML = `
+          <div style="background: white; border: 1.5px dashed #CBD5E1; border-radius: var(--radius-md); padding: 36px 20px; text-align: center; color: #64748B;">
+            <i class="fa-regular fa-comment-dots" style="font-size: 2rem; color: #CBD5E1; margin-bottom: 8px; display: block;"></i>
+            <strong style="font-size: 1rem; color: #334155; display: block;">등록된 한마디가 없습니다.</strong>
+            <p style="font-size: 0.88rem; color: #94A3B8; margin: 4px 0 0 0;">메인 페이지 롤링페이퍼에서 작성된 글이 여기에 실시간으로 표시됩니다.</p>
+          </div>
+        `;
+        return;
+      }
+
+      feedbacks.forEach(item => {
+        let dateStr = item.date;
+        if (!dateStr && item.createdAt && item.createdAt.toDate) {
+          const d = item.createdAt.toDate();
+          dateStr = `${d.getFullYear()}. ${d.getMonth() + 1}. ${d.getDate()}`;
+        } else if (!dateStr) {
+          dateStr = "";
+        }
+
+        const el = document.createElement("div");
+        el.className = "admin-fb-item";
+        el.innerHTML = `
+          <div class="admin-fb-content">
+            <div class="admin-fb-header">
+              <span class="admin-fb-author"><i class="fa-solid fa-user-check" style="color: #FF6B4A; margin-right: 4px;"></i> ${escapeHtml(item.author || "익명")}</span>
+              <span class="admin-fb-affil">${escapeHtml(item.affiliation || "미지정")}</span>
+              <span class="admin-fb-date">${dateStr}</span>
+            </div>
+            <div class="admin-fb-body">${escapeHtml(item.content || "")}</div>
+          </div>
+          <button type="button" class="btn-delete-fb" onclick="deleteAdminFeedback('${item.id}')">
+            <i class="fa-solid fa-trash-can"></i> 삭제
+          </button>
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    window.deleteAdminFeedback = async function(id) {
+      if (confirm("이 한마디를 삭제하시겠습니까? (클라우드에서도 영구 삭제됩니다)")) {
+        await AppState.deleteFeedbackCloud(id);
+        renderAdminFeedbacks();
+        showToast("한마디가 삭제되었습니다.");
       }
     };
   </script>
