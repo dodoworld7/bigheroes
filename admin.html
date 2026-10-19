@@ -406,8 +406,10 @@
     </div>
   </div>
 
-  <div class="toast-container" id="toastContainer"></div>
-
+  <!-- Firebase SDK 및 백엔드 초기화 -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
   <script src="script.js"></script>
   <script>
     // ===== 관리자 비밀번호 서버 인증 및 무차별 대입 방지 보안 =====
@@ -546,6 +548,9 @@
       let currentAdminImgSrc = "";
 
       renderAdminPhotos();
+      AppState.initFirestoreSync(() => {
+        renderAdminPhotos();
+      });
       initAdminDrive();
 
       // 파일 업로드 시 스마트 압축 및 실시간 미리보기
@@ -587,9 +592,9 @@
         });
       }
 
-      // 사진 등록
+      // 사진 등록 (클라우드 영구 저장)
       if (adminPhotoForm) {
-        adminPhotoForm.addEventListener("submit", (e) => {
+        adminPhotoForm.addEventListener("submit", async (e) => {
           e.preventDefault();
           const title = document.getElementById("adminPhotoTitle").value.trim();
           const grade = document.getElementById("adminPhotoGrade").value;
@@ -604,7 +609,7 @@
           const submitBtn = adminPhotoForm.querySelector("button[type='submit']");
           if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 등록 중...`;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 클라우드 저장 중...`;
           }
 
           try {
@@ -616,9 +621,7 @@
               imageUrl: imgSource
             };
 
-            const photos = AppState.getPhotos();
-            photos.unshift(newPhoto);
-            AppState.savePhotos(photos);
+            await AppState.addPhotoCloud(newPhoto);
 
             adminPhotoForm.reset();
             currentAdminImgSrc = "";
@@ -627,8 +630,8 @@
             }
 
             renderAdminPhotos();
-            showToast("새 활동사진이 첫 화면 갤러리에 성공적으로 등록되었습니다!");
-            alert("성공적으로 사진이 등록되었습니다! 첫 화면 갤러리와 아래 목록에서 바로 확인하실 수 있습니다.");
+            showToast("새 활동사진이 클라우드에 영구 저장되었습니다!");
+            alert("성공적으로 사진이 등록되었습니다! 모든 방문자 화면에 즉시 실시간 반영됩니다.");
           } catch (err) {
             alert("사진 등록 실패: " + (err.message || "저장 중 오류가 발생했습니다."));
           } finally {
@@ -640,11 +643,11 @@
         });
       }
 
-      // 복원
+      // 복원 (클라우드 초기화)
       if (adminResetBtn) {
-        adminResetBtn.addEventListener("click", () => {
-          if (confirm("등록된 모든 사진을 기본 추천 사진으로 복원하시겠습니까?")) {
-            AppState.savePhotos(DEFAULT_PHOTOS);
+        adminResetBtn.addEventListener("click", async () => {
+          if (confirm("등록된 모든 사진을 기본 추천 사진으로 복원하시겠습니까? (클라우드 데이터도 초기화됩니다)")) {
+            await AppState.resetPhotosCloud();
             renderAdminPhotos();
             showToast("기본 사진으로 복원되었습니다.");
           }
@@ -712,11 +715,9 @@
       });
     }
 
-    window.deleteAdminPhoto = function(id) {
-      if (confirm("이 사진을 삭제하시겠습니까?")) {
-        let photos = AppState.getPhotos();
-        photos = photos.filter(p => p.id !== id);
-        AppState.savePhotos(photos);
+    window.deleteAdminPhoto = async function(id) {
+      if (confirm("이 사진을 삭제하시겠습니까? (클라우드에서도 영구 삭제됩니다)")) {
+        await AppState.deletePhotoCloud(id);
         renderAdminPhotos();
         showToast("사진이 삭제되었습니다.");
       }

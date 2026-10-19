@@ -110,42 +110,116 @@ function compressImageFile(file, maxWidth = 1280, quality = 0.82) {
 }
 
 // ==========================================================================
-// 2. 상태 관리 (LocalStorage 연동)
+// 2. 상태 관리 (Firebase Firestore 클라우드 백엔드 + LocalStorage 하이브리드)
 // ==========================================================================
 class AppState {
+  static cachedPhotos = null;
+
   static getPhotos() {
+    if (this.cachedPhotos && this.cachedPhotos.length > 0) {
+      return this.cachedPhotos;
+    }
     const stored = localStorage.getItem("big_heroes_photos");
     if (!stored) {
-      localStorage.setItem("big_heroes_photos", JSON.stringify(DEFAULT_PHOTOS));
       return DEFAULT_PHOTOS;
     }
     try {
-      let parsed = JSON.parse(stored);
-      if (!Array.isArray(parsed) || parsed.length === 0) {
-        parsed = DEFAULT_PHOTOS;
-        localStorage.setItem("big_heroes_photos", JSON.stringify(parsed));
-      }
-      return parsed;
+      const parsed = JSON.parse(stored);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_PHOTOS;
     } catch (e) {
       return DEFAULT_PHOTOS;
     }
   }
 
   static savePhotos(photos) {
+    this.cachedPhotos = photos;
     try {
       localStorage.setItem("big_heroes_photos", JSON.stringify(photos));
-      return true;
     } catch (e) {
-      console.warn("로컬 스토리지 한도 감지, 최신 사진 보존하며 정리:", e);
-      // 용량 부족 시 최대 10장으로 제한하여 보존
-      const trimmed = photos.slice(0, 10);
-      try {
-        localStorage.setItem("big_heroes_photos", JSON.stringify(trimmed));
-        return true;
-      } catch (innerErr) {
-        throw new Error("브라우저 저장 공간이 가득 찼습니다. 기존 사진을 일부 삭제 후 다시 등록해 주세요.");
+      console.warn("로컬 스토리지 캐시 저장 경고:", e);
+    }
+  }
+
+  // Firestore 실시간 리스너 연결
+  static initFirestoreSync(onUpdate) {
+    if (typeof firebase === "undefined" || !window.db) {
+      console.log("로컬 모드로 동작 중 (Firebase 미로드)");
+      return;
+    }
+
+    try {
+      window.db.collection("photos")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(async (snapshot) => {
+          if (snapshot.empty) {
+            console.log("Firestore 컬렉션이 비어있어 기본 사진을 클라우드에 초기 등록합니다.");
+            // 기본 사진 자동 시드
+            for (let i = 0; i < DEFAULT_PHOTOS.length; i++) {
+              const p = DEFAULT_PHOTOS[i];
+              await window.db.collection("photos").doc(p.id).set({
+                ...p,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              }).catch(() => {});
+            }
+            return;
+          }
+
+          const photos = [];
+          snapshot.forEach((doc) => {
+            photos.push(doc.data());
+          });
+
+          AppState.savePhotos(photos);
+          if (typeof onUpdate === "function") {
+            onUpdate(photos);
+          }
+        }, (error) => {
+          console.warn("Firestore 동기화 오류 (오프라인 모드로 표시):", error);
+        });
+    } catch (err) {
+      console.warn("Firestore 초기화 예외:", err);
+    }
+  }
+
+  // 클라우드 사진 추가
+  static async addPhotoCloud(photo) {
+    if (window.db && typeof firebase !== "undefined") {
+      await window.db.collection("photos").doc(photo.id).set({
+        ...photo,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    const current = AppState.getPhotos();
+    current.unshift(photo);
+    AppState.savePhotos(current);
+  }
+
+  // 클라우드 사진 삭제
+  static async deletePhotoCloud(id) {
+    if (window.db && typeof firebase !== "undefined") {
+      await window.db.collection("photos").doc(id).delete();
+    }
+    let current = AppState.getPhotos();
+    current = current.filter(p => p.id !== id);
+    AppState.savePhotos(current);
+  }
+
+  // 클라우드 기본 사진으로 복원
+  static async resetPhotosCloud() {
+    if (window.db && typeof firebase !== "undefined") {
+      const snap = await window.db.collection("photos").get();
+      const batch = window.db.batch();
+      snap.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+
+      for (const p of DEFAULT_PHOTOS) {
+        await window.db.collection("photos").doc(p.id).set({
+          ...p,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
       }
     }
+    AppState.savePhotos(DEFAULT_PHOTOS);
   }
 
   static getDriveUrl() {
@@ -185,6 +259,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavigation();
   initDriveLink();
   renderHeroPhotos();
+  AppState.initFirestoreSync(() => {
+    renderHeroPhotos();
+  });
   initPhotoManagement();
   initFrameworkTabs();
   initCaseFilters();
