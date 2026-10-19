@@ -198,14 +198,12 @@ function initNavigation() {
     });
   }
 
-  // 헤더 우측 '자료 드라이브' 버튼
+  // 헤더 우측 '자료 드라이브' 버튼 (누르면 구글 드라이브로 바로 연결)
   const btnHeaderDrive = document.querySelector(".btn-header-drive");
   if (btnHeaderDrive) {
     btnHeaderDrive.addEventListener("click", (e) => {
-      if (isMobileView()) {
-        e.preventDefault();
-        switchMobileTab("#archive");
-      }
+      e.preventDefault();
+      window.open(AppState.getDriveUrl(), "_blank");
     });
   }
 
@@ -382,12 +380,16 @@ function initDriveLink() {
 function updateDriveElements(url) {
   const mainDriveLinkBtn = document.getElementById("mainDriveLinkBtn");
   const currentDriveLinkText = document.getElementById("currentDriveLinkText");
+  const btnHeaderDrive = document.querySelector(".btn-header-drive");
 
   if (mainDriveLinkBtn) {
     mainDriveLinkBtn.href = url;
   }
   if (currentDriveLinkText) {
     currentDriveLinkText.textContent = url;
+  }
+  if (btnHeaderDrive) {
+    btnHeaderDrive.href = url;
   }
 }
 
