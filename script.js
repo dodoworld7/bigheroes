@@ -124,13 +124,6 @@ class AppState {
       if (!Array.isArray(parsed) || parsed.length === 0) {
         parsed = DEFAULT_PHOTOS;
         localStorage.setItem("big_heroes_photos", JSON.stringify(parsed));
-      } else {
-        // 실제 수업 사진이 없으면 최상단에 자동 복원 보존
-        const hasRobot = parsed.some(p => p.imageUrl && p.imageUrl.includes("class_5th_robot"));
-        if (!hasRobot) {
-          parsed.unshift(DEFAULT_PHOTOS[0]);
-          localStorage.setItem("big_heroes_photos", JSON.stringify(parsed));
-        }
       }
       return parsed;
     } catch (e) {
