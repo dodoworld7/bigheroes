@@ -1096,6 +1096,8 @@
                 <p class="fb-text">교내에서 동학년 선생님들과 함께 BIG HEROES 실천 사례를 접하며 많은 영감을 받았습니다. 특히 학생들이 AI 도구를 단순 소비하는 데 그치지 않고, 윤리적 창작과 탐구 활동을 통해 비판적 미디어 리터러시를 체득해가는 모습이 무척 인상 깊었습니다. 연구팀의 헌신적인 실천을 진심으로 응원합니다!</p>
               </div>
             </div>
+            <!-- 3개 초과 시 페이지 이동 버튼 -->
+            <div class="feedback-pagination" id="feedbackPagination"></div>
           </div>
         </div>
 
@@ -1229,32 +1231,19 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="firebase-init.js"></script>
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=6"></script>
   <script>
-    // 롤링페이퍼 기본 3개 글 보장 안전장치
+    // 롤링페이퍼 3개 단위 렌더링 및 페이지 넘김 보장 안전장치
     (function ensureFeedbacks() {
-      const container = document.getElementById("feedbackCardsContainer");
-      const countEl = document.getElementById("feedbackCount");
-      
       const checkAndRender = () => {
-        if (!container) return;
-        const currentCards = container.querySelectorAll(".fb-card-item");
-        if (currentCards.length === 0 || container.innerText.includes("아직 등록된 한마디가 없습니다")) {
-          if (typeof renderFeedbacks === "function") {
-            renderFeedbacks();
-          }
-        }
-        if (countEl) {
-          const finalCards = container.querySelectorAll(".fb-card-item");
-          countEl.textContent = finalCards.length || 3;
+        if (typeof renderFeedbacks === "function") {
+          renderFeedbacks();
         }
       };
 
-      // 즉시 및 로드 직후 확인
       checkAndRender();
       window.addEventListener("load", checkAndRender);
       setTimeout(checkAndRender, 300);
-      setTimeout(checkAndRender, 1000);
     })();
   </script>
 </body>

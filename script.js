@@ -61,30 +61,82 @@ const DEFAULT_PHOTOS = [
   }
 ];
 
-// 소통과 나눔 기본 응원 피드백 데이터 (서울윤중초 2명, 서울영신초 1명)
+// 소통과 나눔 기본 응원 피드백 데이터 (총 5개 샘플 글: 대영초, 영신초, 윤중초 2명, 영동초)
 const DEFAULT_FEEDBACKS = [
+  {
+    id: "fb_sample_daeyoung",
+    author: "양OO",
+    affiliation: "서울대영초등학교",
+    content: "BIG HEROES의 다양한 실천 사례를 통해 AI·디지털 리터러시 교육이 학생들의 일상과 자연스럽게 연결될 수 있음을 느꼈습니다. 특히 학생들이 디지털 기술을 올바르게 활용하는 것을 넘어, 타인을 존중하고 책임 있게 행동하는 디지털 시민으로 성장할 수 있도록 돕는 교육의 중요성을 다시 한번 생각하게 되었습니다. 현장의 생생한 사례와 유익한 자료를 공유해 주셔서 감사합니다!",
+    date: "2026. 10. 19",
+    timeOrder: 500
+  },
   {
     id: "fb_sample_3",
     author: "김OO",
     affiliation: "서울영신초등학교",
     content: "인근 영신초에서도 BIG HEROES의 선도적인 AI·디지털 리터러시 실천 모델을 관심 있게 지켜보고 있었습니다. 학교 울타리를 넘어 씨앗교사 워크숍과 나눔 축제로 인근 학교에도 긍정적인 교육력을 확산해주셔서 큰 배움이 되었습니다. 교육공동체의 따뜻한 성장을 이끌어주셔서 감사합니다.",
-    date: "2026. 10. 19"
+    date: "2026. 10. 19",
+    timeOrder: 400
   },
   {
     id: "fb_sample_2",
     author: "최OO",
     affiliation: "서울윤중초등학교",
     content: "학년별로 알기 쉽게 정리된 활동 자료와 수업 지도안 덕분에 반 아이들과 교실에서 바로 해볼 수 있었습니다. 수업 내내 아이들이 너무 재미있어하고, 스스로 올바른 인터넷 예절을 지키려는 모습이 눈에 띄게 늘어 무척 뿌듯했습니다. 훌륭한 연구 자료를 나눠주셔서 감사합니다!",
-    date: "2026. 10. 19"
+    date: "2026. 10. 19",
+    timeOrder: 300
   },
   {
     id: "fb_sample_1",
     author: "박OO",
     affiliation: "서울윤중초등학교",
     content: "교내에서 동학년 선생님들과 함께 BIG HEROES 실천 사례를 접하며 많은 영감을 받았습니다. 특히 학생들이 AI 도구를 단순 소비하는 데 그치지 않고, 윤리적 창작과 탐구 활동을 통해 비판적 미디어 리터러시를 체득해가는 모습이 무척 인상 깊었습니다. 연구팀의 헌신적인 실천을 진심으로 응원합니다!",
-    date: "2026. 10. 19"
+    date: "2026. 10. 19",
+    timeOrder: 200
+  },
+  {
+    id: "fb_sample_youngdong",
+    author: "이OO",
+    affiliation: "서울영동초등학교",
+    content: "학생들이 디지털 시민으로서 주체적이고 책임감 있게 성장해가는 모습에 깊은 감명을 받았습니다. 학년별 연계가 돋보이는 훌륭한 실천 모델을 아낌없이 공유해주셔서 진심으로 감사드립니다!",
+    date: "2026. 10. 19",
+    timeOrder: 100
   }
 ];
+
+// 롤링페이퍼 정렬 유틸 (사용자 신규 작성글 최신순 우선 + 기본 5개 샘플 글 순서 보장)
+function sortFeedbacks(list) {
+  if (!Array.isArray(list)) return [];
+  return [...list].sort((a, b) => {
+    const isSampleA = String(a.id || "").startsWith("fb_sample_");
+    const isSampleB = String(b.id || "").startsWith("fb_sample_");
+
+    // 1. 사용자가 새로 등록한 글은 샘플 글보다 항상 최우선 (상단 1페이지 노출)
+    if (!isSampleA && isSampleB) return -1;
+    if (isSampleA && !isSampleB) return 1;
+
+    // 2. 둘 다 사용자가 등록한 글인 경우: 최신 타임스탬프 순
+    if (!isSampleA && !isSampleB) {
+      let timeA = 0, timeB = 0;
+      if (a.createdAt && a.createdAt.toMillis) timeA = a.createdAt.toMillis();
+      else if (a.createdAt && typeof a.createdAt === "string") timeA = new Date(a.createdAt).getTime();
+      else if (a.date) timeA = new Date(a.date.replace(/\. /g, "-").replace(/\./g, "-")).getTime();
+
+      if (b.createdAt && b.createdAt.toMillis) timeB = b.createdAt.toMillis();
+      else if (b.createdAt && typeof b.createdAt === "string") timeB = new Date(b.createdAt).getTime();
+      else if (b.date) timeB = new Date(b.date.replace(/\. /g, "-").replace(/\./g, "-")).getTime();
+
+      if (timeA !== timeB) return timeB - timeA;
+      return String(b.id || "").localeCompare(String(a.id || ""));
+    }
+
+    // 3. 둘 다 샘플 글인 경우: timeOrder 순서 (대영초 500 -> 영신초 400 -> 윤중초 300 -> 윤중초 200 -> 영동초 100)
+    const orderA = a.timeOrder || (a.id === "fb_sample_daeyoung" ? 500 : a.id === "fb_sample_3" ? 400 : a.id === "fb_sample_2" ? 300 : a.id === "fb_sample_1" ? 200 : 100);
+    const orderB = b.timeOrder || (b.id === "fb_sample_daeyoung" ? 500 : b.id === "fb_sample_3" ? 400 : b.id === "fb_sample_2" ? 300 : b.id === "fb_sample_1" ? 200 : 100);
+    return orderB - orderA;
+  });
+}
 
 // 고용량 사진 웹 최적화 압축 함수 (Canvas 기반 스마트 리사이징 & 압축)
 function compressImageFile(file, maxWidth = 1280, quality = 0.82) {
@@ -268,13 +320,13 @@ class AppState {
         }
       } catch (e) {}
     }
-    // 기본 3개 글(김OO, 최OO, 박OO)은 항상 보장
+    // 기본 5개 글은 항상 보장
     DEFAULT_FEEDBACKS.forEach(def => {
       if (!list.some(item => item.id === def.id || (item.author === def.author && item.affiliation === def.affiliation))) {
         list.push(def);
       }
     });
-    return list;
+    return sortFeedbacks(list);
   }
 
   static saveFeedbacks(feedbacks) {
@@ -297,30 +349,17 @@ class AppState {
           ...data
         });
       });
-      // 기본 3개 글 항상 보장
+      // 기본 5개 글 항상 보장
       DEFAULT_FEEDBACKS.forEach(def => {
         if (!list.some(item => item.id === def.id || (item.author === def.author && item.affiliation === def.affiliation))) {
           list.push(def);
         }
       });
-      // 서버 및 클라이언트 정렬 호환 (최신순: 날짜 및 타임스탬프 기준)
-      list.sort((a, b) => {
-        let timeA = 0;
-        let timeB = 0;
-        if (a.createdAt && a.createdAt.toMillis) timeA = a.createdAt.toMillis();
-        else if (a.createdAt && typeof a.createdAt === "string") timeA = new Date(a.createdAt).getTime();
-        else if (a.date) timeA = new Date(a.date.replace(/\. /g, "-").replace(/\./g, "-")).getTime();
-
-        if (b.createdAt && b.createdAt.toMillis) timeB = b.createdAt.toMillis();
-        else if (b.createdAt && typeof b.createdAt === "string") timeB = new Date(b.createdAt).getTime();
-        else if (b.date) timeB = new Date(b.date.replace(/\. /g, "-").replace(/\./g, "-")).getTime();
-
-        if (timeA !== timeB) return timeB - timeA;
-        return String(b.id || "").localeCompare(String(a.id || ""));
-      });
-      AppState.saveFeedbacks(list);
+      
+      const sorted = sortFeedbacks(list);
+      AppState.saveFeedbacks(sorted);
       if (typeof onUpdate === "function") {
-        onUpdate(list);
+        onUpdate(sorted);
       }
     };
 
@@ -956,9 +995,13 @@ function initFeedbacks() {
   }
 }
 
+let currentFeedbackPage = 1;
+const FEEDBACKS_PER_PAGE = 3;
+
 function renderFeedbacks() {
   const container = document.getElementById("feedbackCardsContainer");
   const countEl = document.getElementById("feedbackCount");
+  const paginationEl = document.getElementById("feedbackPagination");
   if (!container) return;
 
   let feedbacks = AppState.getFeedbacks();
@@ -969,7 +1012,26 @@ function renderFeedbacks() {
   if (countEl) countEl.textContent = feedbacks.length;
   container.innerHTML = "";
 
-  feedbacks.forEach(item => {
+  const totalPages = Math.ceil(feedbacks.length / FEEDBACKS_PER_PAGE);
+  if (currentFeedbackPage > totalPages) {
+    currentFeedbackPage = totalPages;
+  }
+  if (currentFeedbackPage < 1) {
+    currentFeedbackPage = 1;
+  }
+
+  // 3개까지만 자르기
+  let startIndex = (currentFeedbackPage - 1) * FEEDBACKS_PER_PAGE;
+  let pageItems = feedbacks.slice(startIndex, startIndex + FEEDBACKS_PER_PAGE);
+
+  // 만약 현재 페이지에 표시할 글이 없다면 1페이지로 자동 복귀하여 빈 화면 방지
+  if (pageItems.length === 0 && feedbacks.length > 0) {
+    currentFeedbackPage = 1;
+    startIndex = 0;
+    pageItems = feedbacks.slice(0, FEEDBACKS_PER_PAGE);
+  }
+
+  pageItems.forEach(item => {
     let dateStr = item.date;
     if (!dateStr && item.createdAt && item.createdAt.toDate) {
       const d = item.createdAt.toDate();
@@ -992,7 +1054,46 @@ function renderFeedbacks() {
     `;
     container.appendChild(card);
   });
+
+  // 3개 초과 시 페이지 넘김 버튼 렌더링
+  if (paginationEl) {
+    if (totalPages <= 1) {
+      paginationEl.innerHTML = "";
+    } else {
+      let pageHtml = `
+        <button type="button" class="fb-page-btn" ${currentFeedbackPage === 1 ? 'disabled' : ''} onclick="changeFeedbackPage(${currentFeedbackPage - 1})" aria-label="이전 페이지">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+      `;
+
+      for (let p = 1; p <= totalPages; p++) {
+        pageHtml += `
+          <button type="button" class="fb-page-btn ${p === currentFeedbackPage ? 'active' : ''}" onclick="changeFeedbackPage(${p})" aria-label="${p} 페이지">
+            ${p}
+          </button>
+        `;
+      }
+
+      pageHtml += `
+        <button type="button" class="fb-page-btn ${currentFeedbackPage === totalPages ? 'disabled' : ''} onclick="changeFeedbackPage(${currentFeedbackPage + 1})" aria-label="다음 페이지">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      `;
+
+      paginationEl.innerHTML = pageHtml;
+    }
+  }
 }
+
+window.changeFeedbackPage = function(page) {
+  if (typeof page !== "number" || isNaN(page)) return;
+  currentFeedbackPage = page;
+  renderFeedbacks();
+  const feedbackContainer = document.getElementById("feedbackCardsContainer");
+  if (feedbackContainer) {
+    feedbackContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+};
 
 // 3.8 심사위원 3분 핵심 브리핑 모달
 function initModals() {
