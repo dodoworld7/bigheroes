@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="style.css">
   <script>
     // 인증 여부를 화면 그리기 전에 판단 (관리 화면이 잠깐이라도 보이지 않도록)
-    if (sessionStorage.getItem("big_heroes_admin_ok") === "1") {
+    if (sessionStorage.getItem("big_heroes_admin_ok")) {
       document.documentElement.classList.add("admin-ok");
     }
   </script>
@@ -410,22 +410,46 @@
 
   <script src="script.js"></script>
   <script>
-    // ===== 관리자 비밀번호 서버 인증 =====
+    // ===== 관리자 비밀번호 서버 인증 및 무차별 대입 방지 보안 =====
     (function () {
       const AUTH_KEY = "big_heroes_admin_ok";
+      const FAIL_KEY = "big_heroes_admin_fail_count";
+      const LOCKOUT_KEY = "big_heroes_admin_lockout_time";
+      const MAX_FAILS = 5;
+      const LOCKOUT_MS = 5 * 60 * 1000; // 5분 잠금
+
       const form = document.getElementById("adminLockForm");
       const input = document.getElementById("adminPwInput");
       const errorEl = document.getElementById("adminPwError");
       const logoutBtn = document.getElementById("adminLogoutBtn");
       const submitBtn = form ? form.querySelector("button[type='submit']") : null;
 
-      if (!document.documentElement.classList.contains("admin-ok") && input) {
+      function checkLockout() {
+        const lockoutTime = parseInt(localStorage.getItem(LOCKOUT_KEY) || "0", 10);
+        const now = Date.now();
+        if (lockoutTime && now < lockoutTime) {
+          const remainingSec = Math.ceil((lockoutTime - now) / 1000);
+          showError(`비밀번호를 5회 이상 잘못 입력하여 보안상 잠겼습니다. (${remainingSec}초 후 재시도 가능)`);
+          if (input) input.disabled = true;
+          if (submitBtn) submitBtn.disabled = true;
+          return true;
+        }
+        if (input) input.disabled = false;
+        if (submitBtn) submitBtn.disabled = false;
+        return false;
+      }
+
+      checkLockout();
+
+      if (!document.documentElement.classList.contains("admin-ok") && input && !input.disabled) {
         input.focus();
       }
 
       if (form) {
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
+          if (checkLockout()) return;
+
           const pw = input.value.trim();
           if (!pw) return;
 
@@ -446,26 +470,34 @@
             const data = await res.json().catch(() => ({}));
 
             if (res.ok && data.success) {
+              localStorage.removeItem(FAIL_KEY);
+              localStorage.removeItem(LOCKOUT_KEY);
               sessionStorage.setItem(AUTH_KEY, data.token || "1");
               document.documentElement.classList.add("admin-ok");
               input.value = "";
               errorEl.textContent = "";
               window.scrollTo(0, 0);
+              renderAdminPhotos();
+              initAdminDrive();
             } else {
-              showError(data.message || "비밀번호가 올바르지 않아요.");
+              handleLoginFail(data.message || "비밀번호가 올바르지 않아요.");
             }
           } catch (err) {
-            // 오프라인 로컬 환경 폴백 (로컬 파일 직접 열기 등)
+            // 로컬 오프라인 fallback
             if (pw === "2042") {
+              localStorage.removeItem(FAIL_KEY);
+              localStorage.removeItem(LOCKOUT_KEY);
               sessionStorage.setItem(AUTH_KEY, "1");
               document.documentElement.classList.add("admin-ok");
               input.value = "";
               errorEl.textContent = "";
+              renderAdminPhotos();
+              initAdminDrive();
             } else {
-              showError("비밀번호가 올바르지 않아요.");
+              handleLoginFail("비밀번호가 올바르지 않아요.");
             }
           } finally {
-            if (submitBtn) {
+            if (submitBtn && !checkLockout()) {
               submitBtn.disabled = false;
               submitBtn.innerHTML = `<i class="fa-solid fa-unlock"></i> 확인`;
             }
@@ -473,13 +505,25 @@
         });
       }
 
+      function handleLoginFail(msg) {
+        let fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
+        localStorage.setItem(FAIL_KEY, fails.toString());
+
+        if (fails >= MAX_FAILS) {
+          localStorage.setItem(LOCKOUT_KEY, (Date.now() + LOCKOUT_MS).toString());
+          checkLockout();
+        } else {
+          showError(`${msg} (${fails}/${MAX_FAILS}회 실패)`);
+        }
+      }
+
       function showError(msg) {
         errorEl.textContent = msg;
         input.value = "";
         form.classList.remove("shake");
-        void form.offsetWidth; // 애니메이션 리셋
+        void form.offsetWidth;
         form.classList.add("shake");
-        input.focus();
+        if (!input.disabled) input.focus();
       }
 
       if (logoutBtn) {
@@ -504,19 +548,28 @@
       renderAdminPhotos();
       initAdminDrive();
 
-      // 파일 업로드
+      // 파일 업로드 시 스마트 압축 및 실시간 미리보기
       if (adminFileInput) {
-        adminFileInput.addEventListener("change", (e) => {
+        adminFileInput.addEventListener("change", async (e) => {
           const file = e.target.files[0];
           if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              currentAdminImgSrc = event.target.result;
+            if (adminPreviewBox) {
+              adminPreviewBox.innerHTML = `<span class="preview-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> 사진을 웹 최적화 압축하는 중입니다...</span>`;
+            }
+            try {
+              currentAdminImgSrc = await compressImageFile(file);
               if (adminPreviewBox) {
-                adminPreviewBox.innerHTML = `<img src="${currentAdminImgSrc}" alt="미리보기" style="width:100%; height:100%; object-fit:contain;">`;
+                adminPreviewBox.innerHTML = `
+                  <img src="${currentAdminImgSrc}" alt="미리보기" style="width:100%; height:100%; object-fit:contain;">
+                `;
               }
-            };
-            reader.readAsDataURL(file);
+            } catch (err) {
+              alert("사진 압축 및 변환 실패: " + (err.message || "올바른 이미지 파일인지 확인해 주세요."));
+              adminFileInput.value = "";
+              if (adminPreviewBox) {
+                adminPreviewBox.innerHTML = `<span class="preview-placeholder"><i class="fa-solid fa-circle-exclamation" style="color:var(--coral-primary);"></i> 사진을 다시 선택해 주세요.</span>`;
+              }
+            }
           }
         });
       }
@@ -541,31 +594,49 @@
           const title = document.getElementById("adminPhotoTitle").value.trim();
           const grade = document.getElementById("adminPhotoGrade").value;
           const desc = document.getElementById("adminPhotoDesc").value.trim();
-          const imgSource = currentAdminImgSrc || adminPhotoUrl.value.trim();
+          const imgSource = currentAdminImgSrc || (adminPhotoUrl ? adminPhotoUrl.value.trim() : "");
 
           if (!imgSource) {
             alert("사진 파일을 선택하거나 이미지 URL을 입력해 주세요.");
             return;
           }
 
-          const newPhoto = {
-            id: "p_" + Date.now(),
-            title,
-            grade,
-            desc,
-            imageUrl: imgSource
-          };
+          const submitBtn = adminPhotoForm.querySelector("button[type='submit']");
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 등록 중...`;
+          }
 
-          const photos = AppState.getPhotos();
-          photos.unshift(newPhoto);
-          AppState.savePhotos(photos);
+          try {
+            const newPhoto = {
+              id: "p_" + Date.now(),
+              title,
+              grade,
+              desc,
+              imageUrl: imgSource
+            };
 
-          adminPhotoForm.reset();
-          currentAdminImgSrc = "";
-          adminPreviewBox.innerHTML = `<span class="preview-placeholder"><i class="fa-regular fa-image"></i> 사진을 선택하거나 URL을 입력하면 미리보기가 표시됩니다.</span>`;
+            const photos = AppState.getPhotos();
+            photos.unshift(newPhoto);
+            AppState.savePhotos(photos);
 
-          renderAdminPhotos();
-          alert("성공적으로 사진이 등록되었습니다! 메인 홈페이지에서 바로 확인하실 수 있습니다.");
+            adminPhotoForm.reset();
+            currentAdminImgSrc = "";
+            if (adminPreviewBox) {
+              adminPreviewBox.innerHTML = `<span class="preview-placeholder"><i class="fa-regular fa-image"></i> 사진을 선택하거나 URL을 입력하면 미리보기가 표시됩니다.</span>`;
+            }
+
+            renderAdminPhotos();
+            showToast("새 활동사진이 첫 화면 갤러리에 성공적으로 등록되었습니다!");
+            alert("성공적으로 사진이 등록되었습니다! 첫 화면 갤러리와 아래 목록에서 바로 확인하실 수 있습니다.");
+          } catch (err) {
+            alert("사진 등록 실패: " + (err.message || "저장 중 오류가 발생했습니다."));
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = `<i class="fa-solid fa-check"></i> 첫 화면 갤러리에 등록하기`;
+            }
+          }
         });
       }
 
@@ -575,7 +646,7 @@
           if (confirm("등록된 모든 사진을 기본 추천 사진으로 복원하시겠습니까?")) {
             AppState.savePhotos(DEFAULT_PHOTOS);
             renderAdminPhotos();
-            alert("기본 사진으로 복원되었습니다.");
+            showToast("기본 사진으로 복원되었습니다.");
           }
         });
       }
@@ -647,6 +718,7 @@
         photos = photos.filter(p => p.id !== id);
         AppState.savePhotos(photos);
         renderAdminPhotos();
+        showToast("사진이 삭제되었습니다.");
       }
     };
   </script>

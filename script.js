@@ -57,6 +57,51 @@ const DEFAULT_PHOTOS = [
 // 소통과 나눔 피드백 데이터 (직접 작성할 수 있도록 초기 상태는 빈 배열로 설정)
 const DEFAULT_FEEDBACKS = [];
 
+// 고용량 사진 웹 최적화 압축 함수 (Canvas 기반 스마트 리사이징 & 압축)
+function compressImageFile(file, maxWidth = 1280, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) {
+      return reject(new Error("유효한 이미지 파일이 아닙니다."));
+    }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("파일을 읽을 수 없습니다."));
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("이미지를 불러올 수 없습니다."));
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        // 긴 쪽을 기준으로 최대 크기 이하로 비율 축소
+        if (width > maxWidth || height > maxWidth) {
+          if (width >= height) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxWidth) / height);
+            height = maxWidth;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // JPEG 82% 압축으로 100~200KB 수준의 가볍고 선명한 이미지 생성
+        const compressed = canvas.toDataURL("image/jpeg", quality);
+        resolve(compressed);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 // ==========================================================================
 // 2. 상태 관리 (LocalStorage 연동)
 // ==========================================================================
@@ -75,7 +120,20 @@ class AppState {
   }
 
   static savePhotos(photos) {
-    localStorage.setItem("big_heroes_photos", JSON.stringify(photos));
+    try {
+      localStorage.setItem("big_heroes_photos", JSON.stringify(photos));
+      return true;
+    } catch (e) {
+      console.warn("로컬 스토리지 한도 감지, 최신 사진 보존하며 정리:", e);
+      // 용량 부족 시 최대 10장으로 제한하여 보존
+      const trimmed = photos.slice(0, 10);
+      try {
+        localStorage.setItem("big_heroes_photos", JSON.stringify(trimmed));
+        return true;
+      } catch (innerErr) {
+        throw new Error("브라우저 저장 공간이 가득 찼습니다. 기존 사진을 일부 삭제 후 다시 등록해 주세요.");
+      }
+    }
   }
 
   static getDriveUrl() {
@@ -464,19 +522,25 @@ function initPhotoManagement() {
   if (closePhotoModalBtn) closePhotoModalBtn.addEventListener("click", closeModal);
   if (saveAndClosePhotoModalBtn) saveAndClosePhotoModalBtn.addEventListener("click", closeModal);
 
-  // 파일 업로드 시 미리보기 및 Base64 변환
+  // 파일 업로드 시 스마트 압축 및 미리보기
   if (photoFileInput) {
-    photoFileInput.addEventListener("change", (e) => {
+    photoFileInput.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          currentPreviewSrc = event.target.result;
+        if (newPhotoPreview) {
+          newPhotoPreview.innerHTML = `<span class="preview-placeholder"><i class="fa-solid fa-spinner fa-spin"></i> 사진을 웹 최적화 압축 중...</span>`;
+        }
+        try {
+          currentPreviewSrc = await compressImageFile(file);
           if (newPhotoPreview) {
             newPhotoPreview.innerHTML = `<img src="${currentPreviewSrc}" alt="미리보기">`;
           }
-        };
-        reader.readAsDataURL(file);
+        } catch (err) {
+          showToast(err.message || "이미지 처리 중 오류가 발생했습니다.");
+          if (newPhotoPreview) {
+            newPhotoPreview.innerHTML = `<span class="preview-placeholder"><i class="fa-solid fa-circle-exclamation" style="color:var(--coral-primary);"></i> 이미지 로딩 실패</span>`;
+          }
+        }
       }
     });
   }
